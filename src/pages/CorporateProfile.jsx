@@ -7,6 +7,7 @@ import useFlowRows from '../lib/useFlowRows.js';
 import { pad, ytThumb } from '../lib/motion.js';
 import Roster from '../components/home/Roster.jsx';
 import ProfileCover from '../components/profile/ProfileCover.jsx';
+import ChapterReel from '../components/profile/ChapterReel.jsx';
 import CaseStories, { storyImg, isCut, storyId } from '../components/profile/CaseStories.jsx';
 import TLink from '../components/TLink.jsx';
 import STORIES from '../data/profileStories.js';
@@ -30,32 +31,45 @@ const ALL = data.caseStudies.map( ( c ) => {
 	return st ? { ...st, type, year, client, title, line, tags, metric, label } : null;
 } ).filter( Boolean );
 
+/* For a chapter's fly-through: a framed (non cut-out) picture from each of its
+ * campaigns, and its brand logos. */
+const dollyCards = ( items ) => {
+	const pics = items.map( ( s ) => s.imgs.slice( 1 ).find( ( n ) => ! isCut( n ) ) || s.imgs.find( ( n ) => ! isCut( n ) ) ).filter( Boolean );
+	return pics.slice( 0, 3 ).map( storyImg );
+};
+const dollyMarks = ( items ) => items.map( ( s ) => media[ s.title ]?.mark || media[ s.title ]?.tile ).filter( Boolean ).slice( 0, 2 );
+
 /* Case tuple: [type, year, client, title, line, tags, metric?, label?, text?]. */
 const CHAPTERS = [
 	{
 		id: 'digital', no: 1, kind: 'Digital Case Study', label: 'Digital Campaigns',
 		intro: 'Real-time production war rooms, viral launches, and flagship campaigns for Sri Lanka’s most-loved brands.',
-		figure: [ 'Tiesh-7224-1-2.webp', 'Fashion portrait from a Visual Studios Plus campaign' ]
+		figure: [ 'Tiesh-7224-1-2.webp', 'Fashion portrait from a Visual Studios Plus campaign' ],
+		reel: '/assets/smm/medium-concept-02.mp4', kicker: 'Real-time content that stops the scroll.'
 	},
 	{
 		id: 'retainers', no: 2, kind: 'Digital Retainer', label: 'Always-On Retainers',
 		intro: 'End-to-end channel ownership — strategy, content, and community — for brands we grow month after month.',
-		figure: [ 'KeelesFoodPhotography0314.webp', 'Overhead food photography by Visual Studios Plus' ]
+		figure: [ 'KeelesFoodPhotography0314.webp', 'Overhead food photography by Visual Studios Plus' ],
+		reel: '/assets/smm/waga-web-03.mp4', kicker: 'Always on. Month after month.'
 	},
 	{
 		id: 'branding', no: 3, kind: 'Branding Project', label: 'Branding & Identity',
 		intro: 'Logotypes, packaging architecture, and brand worlds built to feel premium, distinctive and unmistakably crafted.',
-		figure: [ 'DSC_1643-2.webp', 'Jewellery macro photography by Visual Studios Plus' ]
+		figure: [ 'DSC_1643-2.webp', 'Jewellery macro photography by Visual Studios Plus' ],
+		reel: '/assets/projects/dankotuwa.mp4', kicker: 'Identities you can hold.'
 	},
 	{
 		id: 'tvc', no: 4, kind: 'TVC Campaign', label: 'Film & TVC',
 		intro: 'Concept to screen — scripting, direction, and broadcast-grade production for national commercials.',
-		figure: [ 'D85_3829-HDR.webp', 'Hotel terrace overlooking misty mountains, shot by Visual Studios Plus' ]
+		figure: [ 'D85_3829-HDR.webp', 'Hotel terrace overlooking misty mountains, shot by Visual Studios Plus' ],
+		reel: '/assets/smm/waga-web-02.mp4', kicker: 'Real craft. Real results.'
 	},
 	{
 		id: 'photography', no: 5, kind: 'Commercial Photography', label: 'Commercial Photography',
 		intro: 'Tactile, sensory imagery across gastronomy, hospitality and high fashion for brands that live on detail.',
-		figure: [ 'DJI_0078-HDR.webp', 'Aerial photograph of a hillside resort by Visual Studios Plus' ]
+		figure: [ 'DJI_0078-HDR.webp', 'Aerial photograph of a hillside resort by Visual Studios Plus' ],
+		reel: '/assets/projects/heritance.mp4', kicker: 'Frames that sell the experience.'
 	}
 ];
 
@@ -92,7 +106,7 @@ function BrandMark( { client, title } ) {
 /* An image-led case tile — the campaign's lead frame, logo chip, title on a
  * scrim — that opens the full story further down its chapter. */
 function CaseTile( { s, n, feature } ) {
-	const { client, year, title, line, tags, metric, label, text } = s;
+	const { client, year, title, line, tags, metric, label } = s;
 	const lead = s.imgs[ 0 ];
 	return (
 		<TLink to={ `#${ storyId( s ) }` } className={ `cpBrand cpCase${ feature ? ' cpCase--feature' : '' }` } style={ { '--accent': s.accent } }
@@ -105,7 +119,7 @@ function CaseTile( { s, n, feature } ) {
 				<div className="cpCase_over">
 					<p className="cpCase_client">{ client } · { year }</p>
 					<h3 className="cpCase_title">{ title }</h3>
-					{ feature && <p className="cpCase_line">{ text || line }</p> }
+					{ feature && <p className="cpCase_line">{ line }</p> }
 				</div>
 			</div>
 			<div className="cpCase_foot">
@@ -240,6 +254,8 @@ export default function CorporateProfile() {
 									<p className="lede">{ ch.intro }</p>
 								</div>
 							</div>
+							<ChapterReel video={ ch.reel } still={ F( ch.figure[ 0 ] ) } no={ ch.no } label={ ch.label } kicker={ ch.kicker }
+								count={ items.length } accent={ items[ 0 ].accent } cards={ dollyCards( items ) } marks={ dollyMarks( items ) } />
 							<div className="cpCases">
 								{ items.map( ( s, i ) => <CaseTile key={ s.title } s={ s } n={ i + 1 } feature={ i === 0 } /> ) }
 							</div>
