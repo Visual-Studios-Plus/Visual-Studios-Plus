@@ -4505,3 +4505,468 @@ textarea {
 	.footerBrief_note { font-size: 0.75rem; text-align: center; }
 	.footerBrief_foot .pillBtn { justify-content: center; width: 100%; text-align: center; }
 }
+
+/* ==========================================================================
+   Corporate Profile (/profile/)
+   A dark editorial showcase — oversized brand wordmarks, numbered chapters,
+   full-bleed parallax. Styling direction after premium agency portfolios.
+   ========================================================================== */
+
+.corporateProfile {
+	background: var(--hero-bg);
+}
+
+/* Cream hero lead-in, then the page turns dark. */
+.pageHero--profile {
+	background: var(--cream);
+}
+
+.pageHero--profile .pageTitle {
+	text-transform: none;
+}
+
+/* ---------- manifesto / goal ---------- */
+
+.cpManifesto {
+	position: relative;
+	z-index: 2;
+	background: var(--hero-bg);
+	color: var(--cream);
+	padding: 8rem var(--gutter);
+}
+
+.cpManifesto_inner {
+	max-width: var(--maxw);
+	margin: 0 auto;
+}
+
+.cpManifesto .eyebrow {
+	color: var(--lime);
+}
+
+.cpManifesto_title {
+	max-width: 24ch;
+	font-size: clamp(2rem, 4.6vw, 4.2rem);
+	line-height: 1.04;
+	color: var(--cream);
+}
+
+.cpManifesto_line {
+	display: block;
+}
+
+.cpManifesto_line--mute {
+	color: rgba(248, 246, 245, 0.45);
+}
+
+.cpManifesto_cols {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 2.5rem 5vw;
+	margin-top: 3rem;
+	max-width: 62rem;
+}
+
+.cpManifesto_cols p {
+	color: rgba(248, 246, 245, 0.7);
+	font-size: 1.05rem;
+	line-height: 1.6;
+}
+
+.cpSectors {
+	margin-top: 2.5rem;
+}
+
+.cpSectors li {
+	border-color: rgba(255, 255, 255, 0.25);
+	color: rgba(248, 246, 245, 0.85);
+}
+
+.cpStats {
+	margin-top: 4.5rem;
+}
+
+/* ---------- chapters ---------- */
+
+.cpChapter {
+	position: relative;
+	z-index: 2;
+	background: var(--hero-bg);
+	color: var(--cream);
+	padding: 5.5rem var(--gutter) 7rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cpChapter_inner {
+	max-width: var(--maxw);
+	margin: 0 auto;
+}
+
+.cpChapter_head {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	align-items: start;
+	gap: 2.5rem;
+}
+
+.cpChapter_no {
+	font-family: var(--font-display);
+	font-size: clamp(5rem, 16vw, 15rem);
+	font-weight: 700;
+	line-height: 0.8;
+	letter-spacing: -0.04em;
+	color: transparent;
+	-webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.22);
+	text-stroke: 1.5px rgba(255, 255, 255, 0.22);
+}
+
+.cpChapter_head .eyebrow {
+	color: var(--lime);
+}
+
+.cpChapter_head .sectionTitle {
+	color: var(--cream);
+	font-size: clamp(2.4rem, 6vw, 5rem);
+}
+
+.cpChapter_head .lede {
+	margin-top: 1.5rem;
+	max-width: 44rem;
+	color: rgba(248, 246, 245, 0.6);
+}
+
+/* Full-bleed parallax strip under each chapter heading. */
+.cpFigure {
+	position: relative;
+	margin: 3.5rem 0 4.5rem;
+	aspect-ratio: 21 / 7;
+	border-radius: 1.25rem;
+	overflow: hidden;
+	background: #111;
+}
+
+.cpFigure img {
+	position: absolute;
+	inset: -8% 0;
+	width: 100%;
+	height: 116%;
+	object-fit: cover;
+	will-change: transform;
+}
+
+/* ---------- image-led case tiles ---------- */
+
+.cpCases {
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	gap: 1.5rem;
+	margin-top: 3.5rem;
+}
+
+.cpCase {
+	grid-column: span 4;
+	display: flex;
+	flex-direction: column;
+}
+
+/* The first case of each chapter runs full width as a cinematic banner. */
+.cpCase--feature {
+	grid-column: span 12;
+}
+
+.cpCase_media {
+	position: relative;
+	display: block;
+	aspect-ratio: 4 / 5;
+	border-radius: 1rem;
+	overflow: hidden;
+	background: #111;
+}
+
+.cpCase--feature .cpCase_media {
+	aspect-ratio: 16 / 7;
+}
+
+/* Feature banners carry overlaid body copy, so darken the scrim from the left. */
+.cpCase--feature .cpCase_media::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(90deg, rgba(5, 5, 5, 0.75) 0%, rgba(5, 5, 5, 0.3) 45%, rgba(5, 5, 5, 0) 75%);
+	pointer-events: none;
+}
+
+.cpCase_media img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cpCase:hover .cpCase_media img {
+	transform: scale(1.05);
+}
+
+/* Legibility scrim over the photograph. */
+.cpCase_media::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.35) 42%, rgba(5, 5, 5, 0) 68%);
+	pointer-events: none;
+}
+
+.cpCase_no {
+	position: absolute;
+	top: 1rem;
+	left: 1.1rem;
+	z-index: 2;
+	font-family: var(--font-display);
+	font-size: 0.72rem;
+	letter-spacing: 0.12em;
+	color: rgba(255, 255, 255, 0.75);
+	mix-blend-mode: difference;
+}
+
+/* Brand logo chip, top-right of the photo. */
+.cpCase_mark {
+	position: absolute;
+	top: 0.9rem;
+	right: 0.9rem;
+	z-index: 2;
+	display: grid;
+	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 0.55rem;
+	overflow: hidden;
+	background: #fff;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cpCase--feature .cpCase_mark {
+	width: 3.4rem;
+	height: 3.4rem;
+}
+
+.cpCase_mark--logo { padding: 0.4rem; }
+.cpCase_mark--logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.cpCase_mark--logo.is-dark { background: #111; }
+.cpCase_mark--tile img { width: 100%; height: 100%; object-fit: cover; }
+
+.cpCase_mark--mono {
+	background: var(--lime);
+	color: var(--ink);
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: 0.95rem;
+}
+
+/* Headline metric badge. */
+.cpCase_metric {
+	position: absolute;
+	right: 1rem;
+	bottom: auto;
+	top: 4.2rem;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	text-align: right;
+	font-size: 0.6rem;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.7);
+	max-width: 7rem;
+}
+
+.cpCase_metric b {
+	font-family: var(--font-display);
+	font-size: 1.5rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: var(--lime);
+	line-height: 1;
+	margin-bottom: 0.2rem;
+}
+
+.cpCase--feature .cpCase_metric {
+	top: auto;
+	bottom: 1.6rem;
+	right: 2rem;
+	max-width: 12rem;
+}
+
+.cpCase--feature .cpCase_metric b { font-size: 2.6rem; }
+
+/* Client + title on the scrim. */
+.cpCase_over {
+	position: absolute;
+	left: 1.1rem;
+	right: 1.1rem;
+	bottom: 1rem;
+	z-index: 2;
+}
+
+.cpCase--feature .cpCase_over {
+	left: 2rem;
+	bottom: 1.6rem;
+	max-width: 30rem;
+}
+
+.cpCase_client {
+	font-size: 0.65rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--lime);
+	margin-bottom: 0.45rem;
+}
+
+.cpCase_title {
+	font-family: var(--font-display);
+	font-size: 1.15rem;
+	font-weight: 600;
+	line-height: 1.12;
+	letter-spacing: -0.015em;
+	color: #fff;
+}
+
+.cpCase--feature .cpCase_title {
+	font-size: clamp(1.8rem, 3.4vw, 3rem);
+	line-height: 1.02;
+}
+
+.cpCase_over .cpCase_line {
+	margin-top: 0.75rem;
+	font-size: 0.95rem;
+	line-height: 1.45;
+	color: rgba(255, 255, 255, 0.72);
+}
+
+.cpCase_foot {
+	padding: 0.9rem 0.2rem 0;
+}
+
+.cpCase_line--sub {
+	font-size: 0.85rem;
+	line-height: 1.4;
+	color: rgba(248, 246, 245, 0.62);
+}
+
+.cpCase--feature .cpCase_foot { display: none; }
+
+.cpCase_footRow {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 0.85rem;
+}
+
+.cpCase_metricInline {
+	flex-shrink: 0;
+	text-align: right;
+	font-size: 0.58rem;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: rgba(248, 246, 245, 0.45);
+	line-height: 1.2;
+	max-width: 7rem;
+}
+
+.cpCase_metricInline b {
+	display: block;
+	font-family: var(--font-display);
+	font-size: 1.35rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: var(--lime);
+	line-height: 1;
+	margin-bottom: 0.15rem;
+}
+
+.cpCase_tags {
+	margin-top: 0;
+	gap: 0.35rem;
+}
+
+.cpCase_tags li {
+	font-size: 0.62rem;
+	padding: 0.22rem 0.6rem;
+	border-color: rgba(255, 255, 255, 0.16);
+	color: rgba(248, 246, 245, 0.55);
+}
+
+/* ---------- drifting frame gallery ---------- */
+
+.cpGallery {
+	position: relative;
+	z-index: 2;
+	background: var(--hero-bg);
+	color: var(--cream);
+	padding: 6rem 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	overflow: hidden;
+}
+
+.cpGallery_head {
+	max-width: var(--maxw);
+	margin: 0 auto 3rem;
+	padding: 0 var(--gutter);
+}
+
+.cpGallery_head .eyebrow { color: var(--lime); }
+.cpGallery_head .sectionTitle { color: var(--cream); }
+
+.cpGallery_flow {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.cpGallery_row { overflow: hidden; }
+
+.cpGallery_track {
+	display: flex;
+	gap: 1.25rem;
+	width: max-content;
+	will-change: transform;
+}
+
+.cpGallery_item {
+	flex: 0 0 auto;
+	width: clamp(16rem, 26vw, 24rem);
+	aspect-ratio: 3 / 2;
+	border-radius: 0.9rem;
+	overflow: hidden;
+	background: #111;
+}
+
+.cpGallery_item img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Roster sits on the dark page, so give it the same ground. */
+.corporateProfile .rosterSection {
+	background: var(--hero-bg);
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 900px) {
+	.cpManifesto,
+	.cpChapter { padding-left: var(--gutter); padding-right: var(--gutter); }
+	.cpManifesto { padding-top: 6rem; padding-bottom: 6rem; }
+	.cpManifesto_cols { grid-template-columns: 1fr; gap: 1.5rem; }
+	.cpChapter_head { grid-template-columns: 1fr; gap: 1rem; }
+	.cpChapter_no { font-size: clamp(4rem, 22vw, 7rem); }
+	.cpCases { gap: 1rem; }
+	.cpCase { grid-column: span 6; }
+	.cpCase--feature .cpCase_media { aspect-ratio: 4 / 3; }
+	.cpCase--feature .cpCase_metric { position: static; margin-top: 0.5rem; align-items: flex-start; text-align: left; }
+}

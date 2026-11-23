@@ -1,11 +1,11 @@
 import { useLayoutEffect } from 'react';
 import { gsap, reduced, canHover, ScrollTrigger } from './motion.js';
 
-const REVEAL = '.sectionTitle, .resultItem, .featureCase, .catCard, .svcBlock_text, .capCard, .rosterItem, .missionTitle, .projectText';
-const PARALLAX = '.parallaxImg img, .svcBlock_img img, .missionImg img';
+const REVEAL = '.sectionTitle, .resultItem, .featureCase, .catCard, .svcBlock_text, .capCard, .rosterItem, .missionTitle, .projectText, .cpBrand, .cpChapter_head, .cpStat, .cpManifesto_line';
+const PARALLAX = '.parallaxImg img, .svcBlock_img img, .missionImg img, .cpFigure img';
 /* Image frames that get the home page's unveil as they scroll in. */
 const settle = gsap.parseEase( 'power2.out' );
-const FRAMES = '.workPlaceholder, .flagMedia, .catCard_img, .capCard_img, .svcBlock_img, .aboutGrid_img, .missionImg, .projectFilm_frame, .nextProject_img, .reelCard_media';
+const FRAMES = '.workPlaceholder, .flagMedia, .catCard_img, .capCard_img, .svcBlock_img, .aboutGrid_img, .missionImg, .projectFilm_frame, .nextProject_img, .reelCard_media, .cpFigure, .cpBrand_fig';
 
 /**
  * Scroll reveals, section zoom, image parallax, the inner-page hero entrance and number

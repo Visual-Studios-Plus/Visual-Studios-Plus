@@ -14,6 +14,7 @@ const LINKS = [
 	[ '/social-media-marketing/', 'Social Media Marketing', 'social-media-marketing' ],
 	[ '/web-development/', 'Web Development', 'web-development' ],
 	[ '/about/', 'Studio', 'about' ],
+	[ '/profile/', 'Corporate Profile', 'profile' ],
 	[ '/contact/', 'Contact', 'contact' ]
 ];
 
