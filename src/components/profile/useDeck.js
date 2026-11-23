@@ -134,7 +134,8 @@ export default function useDeck( root, enabled ) {
 		let lastAbs = 0;
 		let rises = 0;
 		const onWheel = ( e ) => {
-			if ( html.classList.contains( 'menu-open' ) || document.body.classList.contains( 'menu-open' ) ) {
+			const b = document.body.classList;
+			if ( html.classList.contains( 'menu-open' ) || b.contains( 'menu-open' ) || b.contains( 'pv-open' ) ) {
 				return;
 			}
 			const s = slides[ i ];
@@ -196,7 +197,7 @@ export default function useDeck( root, enabled ) {
 		};
 
 		const onKey = ( e ) => {
-			if ( e.target.closest( 'input, textarea, select, [contenteditable], video' ) || document.body.classList.contains( 'menu-open' ) ) {
+			if ( e.target.closest( 'input, textarea, select, [contenteditable], video' ) || document.body.classList.contains( 'menu-open' ) || document.body.classList.contains( 'pv-open' ) ) {
 				return;
 			}
 			const map = { ArrowDown: 1, ArrowRight: 1, PageDown: 1, ' ': 1, ArrowUp: -1, ArrowLeft: -1, PageUp: -1 };

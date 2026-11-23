@@ -10,8 +10,8 @@
  *            `*` marks a transparent cut-out (floats without a frame)
  *   note   — optional footnote
  *   bg / ink / wordColor — the deck slide's background, text and stacked-word colours
- *   spreads — the presentation's gallery slides that follow (page numbers;
- *             /assets/profile/slides/sNN.webp, rendered from the PDF)
+ *   spreads — the presentation's gallery pages that follow, by page number
+ *             (built as live galleries from profileGalleries.js)
  */
 export default [
 	/* ---------- Digital case studies ---------- */

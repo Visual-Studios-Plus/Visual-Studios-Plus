@@ -6,7 +6,7 @@ import TLink from '../TLink.jsx';
 
 /*
  * The corporate profile as one presentation: the slide types that are not
- * case stories (Hello, gallery spreads, the closing slide) and the presenter bar that runs over all of them.
+ * case stories (Hello, the closing slide) and the presenter bar that runs over all of them.
  *
  * Every slide is a full-screen <section data-slide="…">, a direct child of
  * the page, so the site's section stack makes each one slide over the last.
@@ -17,7 +17,7 @@ import TLink from '../TLink.jsx';
  * Adds `is-in` when the slide shows: on arrival in presentation mode (and
  * removed on leaving, so the build replays), else once it is well on screen.
  */
-function useInView( threshold = 0.35 ) {
+export function useInView( threshold = 0.35 ) {
 	const ref = useRef( null );
 	useEffect( () => {
 		const el = ref.current;
@@ -73,19 +73,6 @@ export function DeckHello() {
 					<li key={ n } style={ { '--i': i, '--f': `${ 5 + ( i % 5 ) }s` } }><img src={ L( n ) } alt={ n.replace( /-\d$/, '' ).replace( /-/g, ' ' ) } loading="lazy" decoding="async" /></li>
 				) ) }
 			</ul>
-		</section>
-	);
-}
-
-/* A gallery slide from the deck, shown whole on its campaign's colour. */
-export function DeckSpread( { page, bg, caption, label } ) {
-	const ref = useInView( 0.25 );
-	return (
-		<section className="cpSlide cpSpread" ref={ ref } data-slide={ label } style={ { '--bg': bg } }>
-			<figure className="cpSpread_fig">
-				<img src={ `/assets/profile/slides/s${ pad( page ) }.webp` } alt={ caption } loading="lazy" decoding="async" />
-			</figure>
-			<p className="cpSpread_cap">{ caption }</p>
 		</section>
 	);
 }

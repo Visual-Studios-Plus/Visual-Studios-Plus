@@ -757,50 +757,401 @@ html.cp-present .siteFooter { display: none; }
 }
 
 /* ==========================================================================
-   Gallery spreads: the deck's own slides, shown whole.
+   Gallery slides: each deck gallery page as a live gallery.
    ========================================================================== */
 
-.cpSpread {
-	display: grid;
-	place-items: center;
-	padding: 5rem var(--gutter) 5.5rem;
+.cpGal {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: clamp(1rem, 2.4vh, 1.8rem);
+	padding: 6rem var(--gutter) 4.5rem;
 	background: var(--bg, #0b0b0b);
+	color: var(--ink, #f4f4f4);
 }
 
-.cpSpread_fig {
-	width: min(100%, calc((100vh - 11rem) * 16 / 9));
-	margin: 0;
+.cpGal_head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 2rem;
+	width: 100%;
+	max-width: var(--maxw);
+	margin: 0 auto;
+	font-family: var(--font-display);
+	opacity: 0;
+	transform: translateY(16px);
+	transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cpGal.is-in .cpGal_head { opacity: 1; transform: none; }
+
+.cpGal_title {
+	font-size: clamp(1rem, 1.6vw, 1.35rem);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	text-transform: uppercase;
+}
+
+.cpGal_count {
+	font-size: 0.7rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	opacity: 0.65;
+	white-space: nowrap;
+}
+
+.cpGal_count span { opacity: 0.7; }
+
+/* Shared: every picture is a button into the viewer. */
+.cpGal button {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	font: inherit;
+	cursor: zoom-in;
+}
+
+/* ---------- grid: a justified mosaic that assembles ---------- */
+
+.cpGal_grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: clamp(0.45rem, 0.9vw, 0.8rem);
+	width: 100%;
+	max-width: var(--maxw);
+	margin: 0 auto;
+}
+
+.cpGal_tile {
+	position: relative;
+	flex: var(--ar) 1 calc(var(--row) * var(--ar));
+	height: var(--row);
+	border-radius: 10px;
+	overflow: hidden;
+	background: color-mix(in srgb, var(--ink, #fff) 8%, transparent);
+	box-shadow: 0 24px 50px -30px rgba(0, 0, 0, 0.7);
+	opacity: 0;
+	transform: translate(var(--sx), var(--sy)) rotate(var(--sr)) scale(0.6);
+	transition: opacity 0.6s ease, transform 1.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+	transition-delay: calc(var(--i) * 55ms);
+}
+
+.cpGal.is-in .cpGal_tile { opacity: 1; transform: none; }
+
+.cpGal_tile img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cpGal_tile:hover img { transform: scale(1.06); }
+.cpGal_tile:hover { box-shadow: 0 30px 60px -26px rgba(0, 0, 0, 0.85); }
+
+/* Keeps the last row from stretching its few pictures across the width. */
+.cpGal_fill { flex: 10 1 0; height: 0; }
+
+/* One picture: a feature, drifting slowly. */
+.cpGal_hero {
+	display: block;
+	width: min(100%, calc((100vh - 14rem) * 1.65));
+	margin: 0 auto;
 	border-radius: 14px;
 	overflow: hidden;
-	box-shadow: 0 50px 100px -40px rgba(0, 0, 0, 0.65);
+	box-shadow: 0 50px 100px -40px rgba(0, 0, 0, 0.7);
 	opacity: 0;
-	transform: translateY(50px) scale(0.94);
-	transition: opacity 0.8s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+	transform: scale(0.92);
+	transition: opacity 0.8s ease, transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cpSpread.is-in .cpSpread_fig { opacity: 1; transform: none; }
+.cpGal.is-in .cpGal_hero { opacity: 1; transform: none; }
 
-.cpSpread_fig img {
+.cpGal_hero img {
 	display: block;
 	width: 100%;
 	height: auto;
+	max-height: calc(100vh - 14rem);
+	object-fit: cover;
+	animation: cpDrift 18s ease-in-out infinite alternate;
 }
 
-.cpSpread_cap {
-	position: absolute;
-	left: var(--gutter);
-	bottom: 1.6rem;
-	font-family: var(--font-display);
-	font-size: 0.72rem;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: #fff;
-	mix-blend-mode: difference;
+@keyframes cpDrift {
+	from { transform: scale(1.02); }
+	to { transform: scale(1.12) translate(-1.5%, -1%); }
 }
+
+/* ---------- phones: reels in frames ---------- */
+
+.cpGal_phones {
+	display: grid;
+	justify-items: center;
+	gap: clamp(1rem, 2.4vh, 1.6rem);
+}
+
+.cpGal_phoneRow {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: clamp(1rem, 2.6vw, 2.4rem);
+}
+
+.cpGal_phone {
+	position: relative;
+	height: min(62vh, 36rem);
+	aspect-ratio: 9 / 19;
+	padding: 0.55rem;
+	border-radius: 2.4rem;
+	background: #0c0c0c;
+	box-shadow:
+		inset 0 0 0 1.5px rgba(255, 255, 255, 0.14),
+		0 40px 80px -30px rgba(0, 0, 0, 0.75);
+	opacity: 0;
+	transform: translateY(18vh) rotate(calc((var(--i) - 1.5) * 4deg));
+	transition: opacity 0.7s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+	transition-delay: calc(var(--i) * 110ms);
+}
+
+.cpGal_phone:nth-child(even) { margin-top: 5vh; }
+
+.cpGal.is-in .cpGal_phone {
+	opacity: 1;
+	transform: none;
+	animation: cpPhoneFloat 6s ease-in-out infinite alternate;
+	animation-delay: calc(1.3s + var(--i) * -1.2s);
+}
+
+/* The notch. */
+.cpGal_phone::before {
+	content: '';
+	position: absolute;
+	z-index: 2;
+	top: 1rem;
+	left: 50%;
+	width: 26%;
+	height: 1.1rem;
+	translate: -50% 0;
+	border-radius: 999px;
+	background: #0c0c0c;
+}
+
+.cpGal_screen {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border-radius: 1.9rem;
+	overflow: hidden;
+	background: #1a1a1a;
+}
+
+.cpGal_screen img,
+.cpGal_screen video {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cpGal_phone:hover .cpGal_screen img { transform: scale(1.05); }
+
+@keyframes cpPhoneFloat {
+	from { translate: 0 -6px; }
+	to { translate: 0 6px; }
+}
+
+.cpGal_note {
+	max-width: 44rem;
+	text-align: center;
+	font-size: clamp(0.85rem, 1.9vh, 1rem);
+	line-height: 1.55;
+	opacity: 0;
+	transition: opacity 0.8s 0.7s;
+}
+
+.cpGal.is-in .cpGal_note { opacity: 0.8; }
+
+/* ---------- laptop: the lid opens, the film plays ---------- */
+
+.cpGal_laptopWrap {
+	display: grid;
+	grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+	align-items: center;
+	gap: 4vw;
+	width: 100%;
+	max-width: var(--maxw);
+	margin: 0 auto;
+}
+
+.cpGal_laptop {
+	display: block;
+	width: min(100%, calc((100vh - 15rem) * 1.75));
+	justify-self: center;
+	perspective: 1600px;
+}
+
+.cpGal_lid {
+	display: block;
+	padding: 2.2% 2.2% 2.6%;
+	border-radius: 18px 18px 6px 6px;
+	background: #0b0b0b;
+	box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.12), 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+	transform-origin: 50% 100%;
+	transform: rotateX(-88deg);
+	transition: transform 1.5s cubic-bezier(0.65, 0, 0.35, 1) 0.15s;
+}
+
+.cpGal.is-in .cpGal_lid { transform: none; }
+
+.cpGal_display {
+	display: block;
+	aspect-ratio: 16 / 10;
+	border-radius: 4px;
+	overflow: hidden;
+	background: #111;
+}
+
+.cpGal_display video,
+.cpGal_display img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.cpGal_drift { animation: cpDrift 16s ease-in-out infinite alternate; }
+
+.cpGal_base {
+	display: block;
+	position: relative;
+	width: 114%;
+	height: clamp(10px, 1.6vh, 16px);
+	margin-left: -7%;
+	border-radius: 0 0 14px 14px;
+	background: linear-gradient(#cfcfd2, #8d8d92);
+	box-shadow: 0 30px 40px -24px rgba(0, 0, 0, 0.55);
+}
+
+.cpGal_base::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 16%;
+	height: 45%;
+	translate: -50% 0;
+	border-radius: 0 0 8px 8px;
+	background: #a5a5aa;
+}
+
+.cpGal_text {
+	font-size: clamp(0.95rem, 2.1vh, 1.15rem);
+	line-height: 1.65;
+	opacity: 0;
+	transform: translateX(30px);
+	transition: opacity 0.9s ease 0.9s, transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.9s;
+}
+
+.cpGal.is-in .cpGal_text { opacity: 0.88; transform: none; }
+
+/* ---------- small screens ---------- */
 
 @media (max-width: 900px) {
-	.cpSpread { min-height: auto !important; padding: 3rem var(--gutter) 3.5rem; }
-	.cpSpread_cap { position: static; margin-top: 1rem; justify-self: start; }
+	.cpGal { padding: 4.5rem var(--gutter) 3.5rem; min-height: auto !important; }
+	.cpGal_head { flex-direction: column; gap: 0.3rem; }
+	.cpGal_grid { --row: 26vw !important; }
+	.cpGal_phoneRow { overflow-x: auto; justify-content: flex-start; width: 100%; padding-bottom: 1rem; scroll-snap-type: x mandatory; }
+	.cpGal_phone { height: 26rem; flex: none; scroll-snap-align: center; }
+	.cpGal_phone:nth-child(even) { margin-top: 0; }
+	.cpGal_laptopWrap { grid-template-columns: 1fr; }
+	.cpGal_text { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cpGal_hero img,
+	.cpGal_drift,
+	.cpGal.is-in .cpGal_phone { animation: none; }
+}
+
+/* ==========================================================================
+   Gallery viewer.
+   ========================================================================== */
+
+.pvViewer {
+	position: fixed;
+	inset: 0;
+	z-index: 300;
+	display: grid;
+	place-items: center;
+	padding: 4.5rem 5.5rem;
+	background: rgba(6, 6, 6, 0.94);
+	color: var(--cream);
+	animation: pvIn 0.35s ease;
+}
+
+@keyframes pvIn {
+	from { opacity: 0; }
+}
+
+.pvViewer_stage {
+	display: grid;
+	place-items: center;
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.pvViewer_stage img,
+.pvViewer_stage video {
+	max-width: 100%;
+	max-height: calc(100vh - 9rem);
+	border-radius: 10px;
+	box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.9);
+	animation: pvPic 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pvPic {
+	from { opacity: 0; transform: scale(0.96); }
+}
+
+.pvViewer_meta {
+	position: absolute;
+	left: 50%;
+	bottom: 1.6rem;
+	translate: -50% 0;
+	font-family: var(--font-display);
+	font-size: 0.75rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	opacity: 0.75;
+}
+
+.pvViewer_meta span { margin-left: 1rem; color: var(--lime); }
+
+.pvViewer button {
+	position: absolute;
+	display: grid;
+	place-items: center;
+	width: 3rem;
+	height: 3rem;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.06);
+	color: inherit;
+	font-size: 1.1rem;
+	cursor: pointer;
+	transition: background 0.2s, color 0.2s;
+}
+
+.pvViewer button:hover { background: var(--lime); color: var(--ink); }
+.pvViewer_close { top: 1.4rem; right: 1.4rem; }
+.pvViewer_nav { top: 50%; translate: 0 -50%; }
+.pvViewer_nav--prev { left: 1.4rem; }
+.pvViewer_nav--next { right: 1.4rem; }
+
+@media (max-width: 700px) {
+	.pvViewer { padding: 4rem 1rem; }
+	.pvViewer_nav { top: auto; bottom: 1rem; translate: none; }
+	.pvViewer_meta { bottom: 1.9rem; }
 }
 
 /* ==========================================================================
@@ -886,5 +1237,3 @@ html.cp-present .siteFooter { display: none; }
 .cpDeck--present .cpStory_metric { margin-top: min(1.5rem, 2vh); padding-top: min(1.1rem, 1.5vh); }
 .cpDeck--present .cpStory_metric .resultNum { font-size: min(clamp(2.2rem, 4vw, 3.6rem), 5.4vh); }
 
-/* The footer strip names the slide, so the spread caption steps aside. */
-.cpDeck--present .cpSpread_cap { display: none; }

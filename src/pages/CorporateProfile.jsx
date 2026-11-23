@@ -6,7 +6,8 @@ import useReveals from '../lib/useReveals.js';
 import ProfileCover from '../components/profile/ProfileCover.jsx';
 import ChapterReel from '../components/profile/ChapterReel.jsx';
 import { Story, useStoryMotion, storyImg, isCut } from '../components/profile/CaseStories.jsx';
-import { DeckHello, DeckSpread, DeckClosing, DeckHud } from '../components/profile/DeckSlides.jsx';
+import { DeckHello, DeckClosing, DeckHud } from '../components/profile/DeckSlides.jsx';
+import DeckGallery from '../components/profile/DeckGallery.jsx';
 import useDeck, { presentMode } from '../components/profile/useDeck.js';
 import STORIES from '../data/profileStories.js';
 
@@ -107,7 +108,7 @@ export default function CorporateProfile() {
 							</section>
 
 							{ ch.lead && ch.lead.map( ( [ page, caption ] ) => (
-								<DeckSpread key={ page } page={ page } bg={ PHOTO_BG } caption={ caption } label={ caption } />
+								<DeckGallery key={ page } page={ page } bg={ PHOTO_BG } ink="#141414" caption={ caption } label={ caption } />
 							) ) }
 
 							{ items.map( ( s ) => {
@@ -116,11 +117,11 @@ export default function CorporateProfile() {
 									<Fragment key={ s.title }>
 										<Story s={ s } n={ n } total={ ALL.length } flip={ n % 2 === 0 } label={ s.word } />
 										{ s.spreads.map( ( page, k ) => (
-											<DeckSpread key={ page } page={ page } bg={ s.bg } label={ `${ s.word } — gallery` }
+											<DeckGallery key={ page } page={ page } bg={ s.bg } ink={ s.ink } label={ `${ s.word } — gallery` }
 												caption={ `${ s.title }${ s.spreads.length > 1 ? ` · ${ k + 1 }/${ s.spreads.length }` : '' }` } />
 										) ) }
 										{ ch.extra && s.title.startsWith( ch.extra.after ) && (
-											<DeckSpread page={ ch.extra.page } bg="#f6f5f1" caption={ ch.extra.caption } label={ ch.extra.caption } />
+											<DeckGallery page={ ch.extra.page } bg="#f6f5f1" ink="#141414" caption={ ch.extra.caption } label={ ch.extra.caption } />
 										) }
 									</Fragment>
 								);
