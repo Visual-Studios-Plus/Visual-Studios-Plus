@@ -4,7 +4,7 @@ import media from '../data/caseMedia.js';
 import { usePage } from '../context/PageContext.jsx';
 import useReveals from '../lib/useReveals.js';
 import useFlowRows from '../lib/useFlowRows.js';
-import { pad } from '../lib/motion.js';
+import { pad, ytThumb } from '../lib/motion.js';
 import PageHero from '../components/PageHero.jsx';
 import Roster from '../components/home/Roster.jsx';
 import TLink from '../components/TLink.jsx';
@@ -139,6 +139,45 @@ function CaseTile( { c, n, feature } ) {
 	);
 }
 
+/* Media showcase: a bold statement beside a horizontally-scrolled reel of the
+ * studio's films and signature frames (direction after lxlcreative / details.so). */
+const SHOWCASE_STILLS = [
+	[ 'Tiesh-7077-1.webp', 'Colombo Fashion Week', 'Fashion / Social' ],
+	[ 'KeelesFoodPhotography0314.webp', 'Gastronomy', 'Food / Commercial' ],
+	[ 'D85_3829-HDR.webp', 'Hospitality', 'Architecture / Interior' ],
+	[ 'DSC_1657-2.webp', 'High Jewellery', 'Product / Macro' ]
+];
+
+function Showcase() {
+	return (
+		<section className="cpShowcase" aria-labelledby="cpShowcaseTitle">
+			<div className="cpShowcase_head">
+				<p className="eyebrow">Media showcase</p>
+				<h2 className="sectionTitle" id="cpShowcaseTitle">Real craft.<br /><span className="cpShowcase_mute">Real results.</span></h2>
+				<p className="lede">Films, campaigns and frames — scroll the reel.</p>
+			</div>
+			<div className="cpShowcase_rail">
+				{ data.films.map( ( f ) => (
+					<a className="cpShowcase_card cpShowcase_card--film" key={ f.slug }
+						href={ `https://www.youtube.com/watch?v=${ f.yt }` } target="_blank" rel="noopener noreferrer">
+						<span className="cpShowcase_media">
+							<img src={ ytThumb( f.yt ) } alt={ f.alt } loading="lazy" decoding="async" />
+							<span className="cpShowcase_play" aria-hidden="true">▶</span>
+						</span>
+						<span className="cpShowcase_meta"><b>{ f.title }</b>{ f.format }</span>
+					</a>
+				) ) }
+				{ SHOWCASE_STILLS.map( ( [ img, name, kind ] ) => (
+					<div className="cpShowcase_card" key={ img }>
+						<span className="cpShowcase_media"><img src={ F( img ) } alt={ `${ name } photography by Visual Studios Plus` } loading="lazy" decoding="async" /></span>
+						<span className="cpShowcase_meta"><b>{ name }</b>{ kind }</span>
+					</div>
+				) ) }
+			</div>
+		</section>
+	);
+}
+
 function Gallery() {
 	const root = useRef( null );
 	const half = Math.ceil( GALLERY.length / 2 );
@@ -249,6 +288,8 @@ export default function CorporateProfile() {
 					</section>
 				);
 			} ) }
+
+			<Showcase />
 
 			<Gallery />
 
