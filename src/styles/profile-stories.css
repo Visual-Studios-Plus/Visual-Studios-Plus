@@ -703,14 +703,17 @@ html.cp-present .siteFooter { display: none; }
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+	align-items: center; /* rows must not stretch the circles into ovals */
 	gap: clamp(0.5rem, 1vw, 0.9rem);
 }
 
 .cpHello_logos li {
 	display: grid;
 	place-items: center;
-	width: clamp(3.6rem, 5.4vw, 5.6rem);
+	width: clamp(3.6rem, min(5.4vw, 8.5vh), 5.6rem);
+	height: auto;
 	aspect-ratio: 1;
+	flex: none;
 	padding: 0.9rem;
 	border-radius: 50%;
 	background: #2a2a2a;
@@ -723,8 +726,8 @@ html.cp-present .siteFooter { display: none; }
 	transition-delay: calc(var(--i) * 28ms);
 }
 
-.cpHello_logos li:nth-child(3n) { width: clamp(4.2rem, 6.4vw, 6.6rem); }
-.cpHello_logos li:nth-child(5n) { width: clamp(3rem, 4.4vw, 4.6rem); }
+.cpHello_logos li:nth-child(3n) { width: clamp(4.2rem, min(6.4vw, 10vh), 6.6rem); }
+.cpHello_logos li:nth-child(5n) { width: clamp(3rem, min(4.4vw, 7vh), 4.6rem); }
 
 .cpHello.is-in .cpHello_logos li { transform: scale(1); opacity: 1; }
 

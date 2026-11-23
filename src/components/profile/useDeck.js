@@ -141,7 +141,12 @@ export default function useDeck( root, enabled ) {
 			const canScroll = s.scrollHeight > s.clientHeight + 2 &&
 				( e.deltaY > 0 ? s.scrollTop + s.clientHeight < s.scrollHeight - 2 : s.scrollTop > 2 );
 			if ( canScroll ) {
-				return; // let a tall slide scroll inside itself first
+				// A slide taller than the screen scrolls inside itself first. Done
+				// by hand: the smooth-scroll library is paused and eats native wheel.
+				e.preventDefault();
+				s.scrollTop += e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
+				acc = 0;
+				return;
 			}
 			e.preventDefault();
 			let dy = e.deltaY;
