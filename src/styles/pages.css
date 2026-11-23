@@ -4562,7 +4562,6 @@ textarea {
 	height: 100%;
 	object-fit: cover;
 	opacity: 0.55;
-	filter: grayscale(0.2) contrast(1.02);
 }
 
 /* Legibility wash so the wordmark reads over the mosaic. */
@@ -5084,8 +5083,7 @@ textarea {
 	width: 4rem;
 	height: 4rem;
 	border-radius: 999px;
-	background: rgba(10, 10, 10, 0.45);
-	backdrop-filter: blur(4px);
+	background: rgba(10, 10, 10, 0.55);
 	border: 1px solid rgba(255, 255, 255, 0.35);
 }
 

@@ -17,12 +17,13 @@ import TLink from '../components/TLink.jsx';
  * site.js, grouped into the studio's five disciplines.
  */
 
-/* A fitting photograph for each case study (keyed by title = caseStudies[n][3]). */
-const F = ( n ) => `/assets/photos/full/${ n }`;
+/* A fitting photograph for each case study (keyed by title = caseStudies[n][3]).
+ * Served from the resized thumbnails — the tiles never render larger than these. */
+const F = ( n ) => `/assets/photos/thumb/${ n }`;
 const CASE_IMG = {
 	'Nescafé × Colombo Fashion Week': F( 'Tiesh-7077-1.webp' ),
 	'Pond’s Super Light Gel Launch': F( '7.webp' ),
-	'UNDP Sri Lanka — HackaDev Social Innovation': '/assets/img/Cover.jpeg',
+	'UNDP Sri Lanka — HackaDev Social Innovation': F( 'DJI_0092-HDR.webp' ),
 	'Dankotuwa Porcelain CGI World': F( 'KeelesFoodPhotography0403.webp' ),
 	'Ministry of Crab Gastronomy': F( 'KeelesFoodPhotography0314.webp' ),
 	'American Express × Swim Week Colombo': F( 'Tiesh-7224-1-2.webp' ),
