@@ -5,9 +5,8 @@ import { usePage } from '../context/PageContext.jsx';
 import useReveals from '../lib/useReveals.js';
 import useFlowRows from '../lib/useFlowRows.js';
 import { pad, ytThumb } from '../lib/motion.js';
-import PageHero from '../components/PageHero.jsx';
 import Roster from '../components/home/Roster.jsx';
-import TLink from '../components/TLink.jsx';
+import ProfileCover from '../components/profile/ProfileCover.jsx';
 
 /*
  * Corporate Profile — the studio's 2026 profile reimagined as an image-led
@@ -83,15 +82,7 @@ const STATS = [
 
 const SECTORS = [ 'FMCG', 'Food & Beverage', 'Fashion', 'Luxury Hospitality' ];
 
-/* A dense spread of work for the intro montage behind the oversized wordmark. */
-const MONTAGE = [
-	'Tiesh-7077-1.webp', 'KeelesFoodPhotography0314.webp', 'DSC_1657-2.webp', 'D85_3829-HDR.webp', '7.webp',
-	'Palliyaguruge-Jewellers2.webp', 'AAB_5081.webp', 'DJI_0078-HDR.webp', 'Tiesh-7287-1.webp', 'CurryLeaf.webp',
-	'D85_2304.webp', 'DSC_1643-2.webp', 'KeelesFoodPhotography0403.webp', 'Tiesh-6743-1-2.webp', 'AAB_5098-1.webp',
-	'D85_2638-HDR.webp', 'Palliyaguruge-Jewellers4.webp', 'Tiesh-7224-1-2.webp', 'DSC_5365.webp', 'D85_2612.webp'
-];
-
-/* A spread of frames for the drifting gallery. */
+/* A dense book of work for the drifting gallery. */
 const GALLERY = [
 	'Tiesh-7077-1.webp', 'KeelesFoodPhotography0314.webp', 'DSC_1657-2.webp', 'D85_3829-HDR.webp',
 	'7.webp', 'Palliyaguruge-Jewellers2.webp', 'AAB_5081.webp', 'DJI_0078-HDR.webp',
@@ -223,28 +214,7 @@ export default function CorporateProfile() {
 
 	return (
 		<div ref={ root } className="corporateProfile">
-			<PageHero className="pageHero--profile" eyebrow="Corporate Profile · Colombo · 2026"
-				lines={ [ 'The creative', 'agency' ] }
-				lede="We create content meant to be experienced. Not simply consumed.">
-				<ul className="pageJump">
-					{ CHAPTERS.map( ( ch ) => (
-						<li key={ ch.id }><TLink to={ `#${ ch.id }` }>({ pad( ch.no ) }) { ch.label }</TLink></li>
-					) ) }
-				</ul>
-			</PageHero>
-
-			<section className="cpMontage" aria-label="Visual Studios Plus showreel montage">
-				<div className="cpMontage_grid" aria-hidden="true">
-					{ MONTAGE.map( ( f ) => (
-						<span className="cpMontage_cell" key={ f }><img src={ F( f ) } alt="" loading="lazy" decoding="async" /></span>
-					) ) }
-				</div>
-				<div className="cpMontage_center">
-					<p className="eyebrow">Showreel · 2026</p>
-					<h2 className="cpMontage_word">Visual Studios<span className="cpMontage_plus">+</span></h2>
-					<p className="cpMontage_sub">Branding · Film · Photography · Social · CGI</p>
-				</div>
-			</section>
+			<ProfileCover />
 
 			<section className="cpManifesto" aria-labelledby="cpGoalTitle">
 				<div className="cpManifesto_inner">
