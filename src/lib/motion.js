@@ -42,15 +42,30 @@ export function startScroll() {
 	}
 }
 
+/*
+ * Document y of an element. Inside a stacked (sticky) section the on-screen
+ * position is wherever the card is frozen, not where it sits in the page, so
+ * the card is measured in normal flow for a moment (static ignores its `top`).
+ */
+function flowTop( el ) {
+	const card = el.closest( '.stackCard' );
+	if ( ! card ) {
+		return el.getBoundingClientRect().top + window.scrollY;
+	}
+	const prev = card.style.position;
+	card.style.position = 'static';
+	const y = el.getBoundingClientRect().top + window.scrollY;
+	card.style.position = prev;
+	return y;
+}
+
 /** Scroll to a y position or element, through Lenis when it runs. */
 export function scrollToTarget( target, { offset = 0, immediate = false } = {} ) {
+	const y = typeof target === 'number' ? target : flowTop( target ) + offset;
 	if ( lenis ) {
-		lenis.scrollTo( target, { offset, immediate, duration: immediate ? 0 : 1.4, force: true } );
+		lenis.scrollTo( y, { immediate, duration: immediate ? 0 : 1.4, force: true } );
 		return;
 	}
-	const y = typeof target === 'number'
-		? target
-		: target.getBoundingClientRect().top + window.scrollY + offset;
 	window.scrollTo( { top: y, behavior: immediate || reduced ? 'auto' : 'smooth' } );
 }
 

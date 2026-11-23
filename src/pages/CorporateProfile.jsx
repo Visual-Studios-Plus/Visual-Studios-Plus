@@ -7,6 +7,9 @@ import useFlowRows from '../lib/useFlowRows.js';
 import { pad, ytThumb } from '../lib/motion.js';
 import Roster from '../components/home/Roster.jsx';
 import ProfileCover from '../components/profile/ProfileCover.jsx';
+import CaseStories, { storyImg, isCut, storyId } from '../components/profile/CaseStories.jsx';
+import TLink from '../components/TLink.jsx';
+import STORIES from '../data/profileStories.js';
 
 /*
  * Corporate Profile — the studio's 2026 profile reimagined as an image-led
@@ -16,33 +19,16 @@ import ProfileCover from '../components/profile/ProfileCover.jsx';
  * site.js, grouped into the studio's five disciplines.
  */
 
-/* A fitting photograph for each case study (keyed by title = caseStudies[n][3]).
- * Served from the resized thumbnails — the tiles never render larger than these. */
+/* Photo thumbnails for the gallery and showcase stills. */
 const F = ( n ) => `/assets/photos/thumb/${ n }`;
-const CASE_IMG = {
-	'Nescafé × Colombo Fashion Week': F( 'Tiesh-7077-1.webp' ),
-	'Pond’s Super Light Gel Launch': F( '7.webp' ),
-	'UNDP Sri Lanka — HackaDev Social Innovation': F( 'DJI_0092-HDR.webp' ),
-	'Dankotuwa Porcelain CGI World': F( 'KeelesFoodPhotography0403.webp' ),
-	'Ministry of Crab Gastronomy': F( 'KeelesFoodPhotography0314.webp' ),
-	'American Express × Swim Week Colombo': F( 'Tiesh-7224-1-2.webp' ),
-	'Knorr Mother’s Day Campaign': '/assets/cases/knorr-2.webp',
-	'Munchee CBL — Festive AI & Lego Campaign': '/assets/cases/knorr-5.webp',
-	'Ahmad Tea London — Digital Channel Retainer': F( 'AAB_5081.webp' ),
-	'Swisstek Aluminium — Technical & Solar Strategy': F( 'D85_2638-HDR.webp' ),
-	'Swadeshi Khomba — Natural Herbal Digital Presence': F( 'DJI_0078-HDR.webp' ),
-	'Imorich Ice Cream — 5-Year Creative Partnership': F( 'CL4.webp' ),
-	'SOZO Sparkling Drinks — Identity & Can Design': F( 'DSC_1643-2.webp' ),
-	'Too Good Dessert Chocolatier': F( 'CurryLeaf.webp' ),
-	'Viva La Vida Pharma Skincare': F( 'DSC_1657-2.webp' ),
-	'CBW (Cairns Bicycle Works) — Australia': '/assets/brands/cbw.webp',
-	'Te Dalu — Boutique Hotel Ella': F( 'D85_2304.webp' ),
-	'Viva Malted Food Drink — Avurudu Series': '/assets/img/yt-ZX7DkXlNgmk.jpg',
-	'MintPay — Digital Vouchers Commercial': '/assets/img/yt-Nv1hYJFlshM.jpg',
-	'Swadeshi Khomba — Women’s Day TVC': F( 'Tiesh-6743-1-2.webp' ),
-	'DSI Footwear — Everyday Journeys': F( 'Tiesh-7287-1.webp' ),
-	'Sapphire Dragon Chinese Restaurant': F( 'AAB_5098-1.webp' )
-};
+
+/* Every case study joined with its story from the profile (lead image, copy,
+ * brand colour), numbered in profile order. */
+const ALL = data.caseStudies.map( ( c ) => {
+	const st = STORIES.find( ( x ) => c[ 3 ].startsWith( x.match ) );
+	const [ type, year, client, title, line, tags, metric, label ] = c;
+	return st ? { ...st, type, year, client, title, line, tags, metric, label } : null;
+} ).filter( Boolean );
 
 /* Case tuple: [type, year, client, title, line, tags, metric?, label?, text?]. */
 const CHAPTERS = [
@@ -103,14 +89,16 @@ function BrandMark( { client, title } ) {
 	return <span className="cpCase_mark cpCase_mark--mono" aria-hidden="true">{ initials }</span>;
 }
 
-/* An image-led case tile: photograph, logo chip, headline result, title on a scrim. */
-function CaseTile( { c, n, feature } ) {
-	const [ type, year, client, title, line, tags, metric, label, text ] = c;
-	const img = CASE_IMG[ title ] || F( 'D85_3829-HDR.webp' );
+/* An image-led case tile — the campaign's lead frame, logo chip, title on a
+ * scrim — that opens the full story further down its chapter. */
+function CaseTile( { s, n, feature } ) {
+	const { client, year, title, line, tags, metric, label, text } = s;
+	const lead = s.imgs[ 0 ];
 	return (
-		<article className={ `cpBrand cpCase${ feature ? ' cpCase--feature' : '' }` }>
-			<div className="cpBrand_fig cpCase_media">
-				<img src={ img } alt={ `${ client } — ${ title }` } loading="lazy" decoding="async" />
+		<TLink to={ `#${ storyId( s ) }` } className={ `cpBrand cpCase${ feature ? ' cpCase--feature' : '' }` } style={ { '--accent': s.accent } }
+			aria-label={ `${ title } — read the case story` }>
+			<div className={ `cpBrand_fig cpCase_media${ isCut( lead ) ? ' cpCase_media--cut' : '' }` }>
+				<img src={ storyImg( lead ) } alt={ `${ client } — ${ title }` } loading="lazy" decoding="async" />
 				<span className="cpCase_no">{ pad( n ) }</span>
 				<BrandMark client={ client } title={ title } />
 				{ feature && metric && <span className="cpCase_metric"><b>{ metric }</b>{ label }</span> }
@@ -127,7 +115,7 @@ function CaseTile( { c, n, feature } ) {
 					{ metric && <p className="cpCase_metricInline"><b>{ metric }</b>{ label }</p> }
 				</div>
 			</div>
-		</article>
+		</TLink>
 	);
 }
 
@@ -240,7 +228,7 @@ export default function CorporateProfile() {
 			</section>
 
 			{ CHAPTERS.map( ( ch ) => {
-				const items = data.caseStudies.filter( ( c ) => c[ 0 ] === ch.kind );
+				const items = ALL.filter( ( s ) => s.type === ch.kind );
 				return (
 					<section className="cpChapter" id={ ch.id } key={ ch.id } aria-labelledby={ `${ ch.id }-title` }>
 						<div className="cpChapter_inner">
@@ -253,8 +241,9 @@ export default function CorporateProfile() {
 								</div>
 							</div>
 							<div className="cpCases">
-								{ items.map( ( c, i ) => <CaseTile key={ c[ 3 ] } c={ c } n={ i + 1 } feature={ i === 0 } /> ) }
+								{ items.map( ( s, i ) => <CaseTile key={ s.title } s={ s } n={ i + 1 } feature={ i === 0 } /> ) }
 							</div>
+							<CaseStories stories={ items } start={ ALL.indexOf( items[ 0 ] ) + 1 } total={ ALL.length } />
 						</div>
 					</section>
 				);

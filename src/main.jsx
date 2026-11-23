@@ -8,6 +8,7 @@ import './styles/style.css';
 import './styles/pages.css';
 import './styles/brand-type.css';
 import './styles/profile.css';
+import './styles/profile-stories.css';
 
 /*
  * No StrictMode: the pinned ScrollTriggers and the nav's SVG timelines mutate
