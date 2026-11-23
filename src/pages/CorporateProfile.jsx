@@ -82,6 +82,14 @@ const STATS = [
 
 const SECTORS = [ 'FMCG', 'Food & Beverage', 'Fashion', 'Luxury Hospitality' ];
 
+/* A dense spread of work for the intro montage behind the oversized wordmark. */
+const MONTAGE = [
+	'Tiesh-7077-1.webp', 'KeelesFoodPhotography0314.webp', 'DSC_1657-2.webp', 'D85_3829-HDR.webp', '7.webp',
+	'Palliyaguruge-Jewellers2.webp', 'AAB_5081.webp', 'DJI_0078-HDR.webp', 'Tiesh-7287-1.webp', 'CurryLeaf.webp',
+	'D85_2304.webp', 'DSC_1643-2.webp', 'KeelesFoodPhotography0403.webp', 'Tiesh-6743-1-2.webp', 'AAB_5098-1.webp',
+	'D85_2638-HDR.webp', 'Palliyaguruge-Jewellers4.webp', 'Tiesh-7224-1-2.webp', 'DSC_5365.webp', 'D85_2612.webp'
+];
+
 /* A spread of frames for the drifting gallery. */
 const GALLERY = [
 	'Tiesh-7077-1.webp', 'KeelesFoodPhotography0314.webp', 'DSC_1657-2.webp', 'D85_3829-HDR.webp',
@@ -184,6 +192,19 @@ export default function CorporateProfile() {
 					) ) }
 				</ul>
 			</PageHero>
+
+			<section className="cpMontage" aria-label="Visual Studios Plus showreel montage">
+				<div className="cpMontage_grid" aria-hidden="true">
+					{ MONTAGE.map( ( f ) => (
+						<span className="cpMontage_cell" key={ f }><img src={ F( f ) } alt="" loading="lazy" decoding="async" /></span>
+					) ) }
+				</div>
+				<div className="cpMontage_center">
+					<p className="eyebrow">Showreel · 2026</p>
+					<h2 className="cpMontage_word">Visual Studios<span className="cpMontage_plus">+</span></h2>
+					<p className="cpMontage_sub">Branding · Film · Photography · Social · CGI</p>
+				</div>
+			</section>
 
 			<section className="cpManifesto" aria-labelledby="cpGoalTitle">
 				<div className="cpManifesto_inner">
