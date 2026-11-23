@@ -36,7 +36,7 @@ const place = ( k ) => {
 	};
 };
 
-export default function ChapterReel( { video, still, no, label, kicker, count, cards = [], marks = [], accent } ) {
+export default function ChapterReel( { video, still, no, label, kicker, count, cards = [], marks = [], accent, present = false } ) {
 	const root = useRef( null );
 	const vid = useRef( null );
 
@@ -52,6 +52,27 @@ export default function ChapterReel( { video, still, no, label, kicker, count, c
 				v.load();
 			}
 		};
+		const ready = () => v.classList.add( 'is-playing' );
+		v.addEventListener( 'playing', ready );
+
+		// Presentation mode: the slide says when it is up.
+		if ( present ) {
+			const slide = root.current.closest( 'section' );
+			const enter = () => {
+				load();
+				v.play().catch( () => {} );
+			};
+			const leave = () => v.pause();
+			slide.addEventListener( 'deck:enter', enter );
+			slide.addEventListener( 'deck:leave', leave );
+			return () => {
+				slide.removeEventListener( 'deck:enter', enter );
+				slide.removeEventListener( 'deck:leave', leave );
+				v.removeEventListener( 'playing', ready );
+				v.pause();
+			};
+		}
+
 		const near = new IntersectionObserver( ( [ e ] ) => e.isIntersecting && load(), { rootMargin: '900px 0px' } );
 		const onScreen = new IntersectionObserver( ( [ e ] ) => {
 			if ( e.isIntersecting ) {
@@ -65,15 +86,13 @@ export default function ChapterReel( { video, still, no, label, kicker, count, c
 		}, { threshold: 0.1 } );
 		near.observe( root.current );
 		onScreen.observe( v );
-		const ready = () => v.classList.add( 'is-playing' );
-		v.addEventListener( 'playing', ready );
 		return () => {
 			near.disconnect();
 			onScreen.disconnect();
 			v.removeEventListener( 'playing', ready );
 			v.pause();
 		};
-	}, [ video ] );
+	}, [ video, present ] );
 
 	// The fly-through.
 	useLayoutEffect( () => {
@@ -111,6 +130,31 @@ export default function ChapterReel( { video, still, no, label, kicker, count, c
 			title.style.transform = `translateY(${ ( 1 - t ) * 24 }px)`;
 		};
 
+		// Presentation mode: the camera pushes in as the slide arrives.
+		if ( present ) {
+			const slide = el.closest( 'section' );
+			let tw = null;
+			const enter = () => {
+				tw?.kill();
+				cam.z = -150;
+				apply();
+				tw = gsap.to( cam, { z: END_Z, duration: 3.4, delay: 0.7, ease: 'power2.inOut', onUpdate: apply } );
+			};
+			const leave = () => {
+				tw?.kill();
+				cam.z = -150;
+				apply();
+			};
+			apply();
+			slide.addEventListener( 'deck:enter', enter );
+			slide.addEventListener( 'deck:leave', leave );
+			return () => {
+				slide.removeEventListener( 'deck:enter', enter );
+				slide.removeEventListener( 'deck:leave', leave );
+				tw?.kill();
+			};
+		}
+
 		const ctx = gsap.context( () => {
 			apply();
 			gsap.to( cam, {
@@ -119,13 +163,13 @@ export default function ChapterReel( { video, still, no, label, kicker, count, c
 			} );
 		}, el );
 		return () => ctx.revert();
-	}, [] );
+	}, [ present ] );
 
 	const [ b, c, d ] = cards;
 	const [ ma, me ] = marks;
 
 	return (
-		<div className="cpDolly" ref={ root } style={ { '--accent': accent } }>
+		<div className={ `cpDolly${ present ? ' cpDolly--present' : '' }` } ref={ root } style={ { '--accent': accent } }>
 			<div className="cpDolly_stage">
 				<div className="cpDolly_world">
 					<span className="cpDolly_layer cpDolly_num" data-k="num" style={ place( 'num' ) } aria-hidden="true">{ pad( no ) }</span>

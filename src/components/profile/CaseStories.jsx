@@ -3,11 +3,12 @@ import media from '../../data/caseMedia.js';
 import { gsap, reduced, canHover, pad, slugify } from '../../lib/motion.js';
 
 /*
- * Case stories: one section per campaign from the corporate profile, in the
- * profile's own idiom (the brand name repeated as a giant band of type) and a
- * motion-design collage (direction after layered "motion web" layouts):
+ * Case story slides: each campaign's hero slide from the corporate profile,
+ * rebuilt as a full-screen slide in the deck's own idiom — the brand's colour,
+ * the brand name stacked in giant rows (solid / outlined) behind a collage,
+ * and the copy — followed in the page by its gallery slides.
  *
- *   - two rows of the brand word slide in opposite directions with the scroll
+ *   - the stacked rows slide in alternate directions with the scroll
  *   - the lead frame unveils, the floating frames and cut-outs pop in and then
  *     drift at their own depth (data-speed) as the page moves
  *   - the pointer tilts the collage, cut-outs most
@@ -39,10 +40,12 @@ function Mark( { client, title } ) {
 	return null;
 }
 
-function Story( { s, n, total, flip } ) {
+/* One hero slide. Branding projects use the deck's white slide and yellow swoosh. */
+export function Story( { s, n, total, flip, label } ) {
 	const stage = useRef( null );
 	const [ lead, ...floats ] = s.imgs;
-	const words = Array.from( { length: 6 }, () => s.word );
+	const brand = s.type === 'Branding Project';
+	const row = Array.from( { length: 5 }, () => s.word );
 
 	const onMove = ( e ) => {
 		if ( reduced || ! canHover || ! stage.current ) {
@@ -58,16 +61,25 @@ function Story( { s, n, total, flip } ) {
 	};
 
 	return (
-		<article className={ `cpStory${ flip ? ' cpStory--flip' : '' }` } id={ storyId( s ) }
-			style={ { '--accent': s.accent } } aria-labelledby={ `${ storyId( s ) }-t` }>
-			<div className="cpStory_marquee" aria-hidden="true">
-				<div className="cpStory_row" data-dir="1">{ words.map( ( w, i ) => <span key={ i }>{ w }<i>✦</i></span> ) }</div>
-				<div className="cpStory_row cpStory_row--out" data-dir="-1">{ words.map( ( w, i ) => <span key={ i }>{ w }<i>✦</i></span> ) }</div>
-			</div>
+		<section className={ `cpSlide cpStory${ flip ? ' cpStory--flip' : '' }${ brand ? ' cpStory--brand' : '' }` } id={ storyId( s ) }
+			data-slide={ label } style={ { '--accent': s.accent, '--bg': s.bg, '--ink': s.ink, '--word': s.wordColor } }
+			aria-labelledby={ `${ storyId( s ) }-t` }>
+			{ brand ? (
+				<svg className="cpStory_swoosh" viewBox="0 0 400 400" aria-hidden="true">
+					<path d="M60 -20 C 40 160, 120 330, 300 330 C 400 330, 420 200, 330 150" fill="none" stroke="currentColor" strokeWidth="34" strokeLinecap="round" />
+				</svg>
+			) : (
+				<div className="cpStory_marquee" aria-hidden="true">
+					{ [ 0, 1, 2, 3 ].map( ( r ) => (
+						<div key={ r } className={ `cpStory_row${ r % 2 ? ' cpStory_row--out' : '' }` } data-dir={ r % 2 ? -1 : 1 }>
+							{ row.map( ( w, i ) => <span key={ i }>{ w }</span> ) }
+						</div>
+					) ) }
+				</div>
+			) }
 
 			<div className="cpStory_grid">
 				<div className="cpStory_stage" ref={ stage } onMouseMove={ onMove } onMouseLeave={ onLeave }>
-					<span className="cpStory_glow" aria-hidden="true" />
 					<div className="cpStory_layer" data-speed="0.35">
 						<figure className={ `cpStory_lead${ isCut( lead ) ? ' is-cut' : '' }` } style={ { '--d': 0.4 } }>
 							<img src={ storyImg( lead ) } alt={ `${ s.client } — ${ s.title }` } loading="lazy" decoding="async" />
@@ -90,7 +102,6 @@ function Story( { s, n, total, flip } ) {
 						<p className="cpStory_client">{ s.client }</p>
 					</div>
 					<h3 className="cpStory_title" id={ `${ storyId( s ) }-t` }>{ s.title }</h3>
-					<p className="cpStory_line">{ s.line }</p>
 					<p className="cpStory_text">{ s.text }</p>
 					<ul className="pillList cpStory_tags">{ s.tags.map( ( t ) => <li key={ t }>{ t }</li> ) }</ul>
 					{ s.metric && (
@@ -102,57 +113,94 @@ function Story( { s, n, total, flip } ) {
 					{ s.note && <p className="cpStory_note">* { s.note }</p> }
 				</div>
 			</div>
-		</article>
+		</section>
 	);
 }
 
-export default function CaseStories( { stories, start = 1, total } ) {
-	const root = useRef( null );
+/* A story slide's build: lead unveils, floats pop in, copy and rows rise. */
+function build( story ) {
+	const tl = gsap.timeline();
+	const lead = story.querySelector( '.cpStory_lead' );
+	if ( lead.classList.contains( 'is-cut' ) ) {
+		tl.from( lead, { scale: 0.7, opacity: 0, y: 60, duration: 1.3, ease: 'expo.out' } );
+	} else {
+		tl.fromTo( lead, { clipPath: 'inset(100% 0% 0% 0% round 1rem)' }, { clipPath: 'inset(0% 0% 0% 0% round 1rem)', duration: 1.3, ease: 'expo.inOut', clearProps: 'clipPath' } )
+			.from( lead.querySelector( 'img' ), { scale: 1.25, duration: 1.6, ease: 'expo.out' }, '<0.15' );
+	}
+	tl.from( story.querySelectorAll( '.cpStory_float' ), {
+		scale: 0.4, opacity: 0, rotate: ( i ) => ( i % 2 ? 22 : -22 ), y: 80,
+		duration: 1.1, ease: 'back.out(1.7)', stagger: 0.12
+	}, 0.35 )
+		.from( story.querySelectorAll( '.cpStory_copy > *' ), { y: 34, opacity: 0, duration: 0.9, ease: 'expo.out', stagger: 0.06 }, 0.2 )
+		.from( story.querySelectorAll( '.cpStory_row' ), { xPercent: ( i ) => ( i % 2 ? 12 : -12 ), opacity: 0, duration: 1.4, ease: 'expo.out', stagger: 0.08 }, 0 );
+	const sw = story.querySelector( '.cpStory_swoosh path' );
+	if ( sw ) {
+		const len = sw.getTotalLength();
+		tl.fromTo( sw, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 1.8, ease: 'expo.inOut' }, 0 );
+	}
+	return tl;
+}
 
+/*
+ * Motion for every story slide inside `root`. In presentation mode each slide
+ * builds on arrival (and again on every return) and its brand rows drift while
+ * it is up; otherwise the build plays as it scrolls in and the rows and layers
+ * are scrubbed by the scroll.
+ */
+export function useStoryMotion( root, present = false ) {
 	useLayoutEffect( () => {
 		if ( reduced || ! root.current ) {
 			return undefined;
 		}
-		const ctx = gsap.context( () => {
-			gsap.utils.toArray( '.cpStory' ).forEach( ( story ) => {
-				// Entrance: lead unveils, floats pop in, copy rises.
-				const tl = gsap.timeline( { scrollTrigger: { trigger: story, start: 'top 72%', once: true } } );
-				const lead = story.querySelector( '.cpStory_lead' );
-				if ( lead.classList.contains( 'is-cut' ) ) {
-					tl.from( lead, { scale: 0.7, opacity: 0, y: 60, duration: 1.3, ease: 'expo.out' } );
-				} else {
-					tl.fromTo( lead, { clipPath: 'inset(100% 0% 0% 0% round 1rem)' }, { clipPath: 'inset(0% 0% 0% 0% round 1rem)', duration: 1.3, ease: 'expo.inOut', clearProps: 'clipPath' } )
-						.from( lead.querySelector( 'img' ), { scale: 1.25, duration: 1.6, ease: 'expo.out' }, '<0.15' );
-				}
-				tl.from( story.querySelectorAll( '.cpStory_float' ), {
-					scale: 0.4, opacity: 0, rotate: ( i ) => ( i % 2 ? 22 : -22 ), y: 80,
-					duration: 1.1, ease: 'back.out(1.7)', stagger: 0.12
-				}, 0.35 )
-					.from( story.querySelectorAll( '.cpStory_copy > *' ), {
-						y: 34, opacity: 0, duration: 0.9, ease: 'expo.out', stagger: 0.06
-					}, 0.2 );
+		const stories = [ ...root.current.querySelectorAll( '.cpStory' ) ];
 
+		if ( present ) {
+			const offs = stories.map( ( story ) => {
+				let tl = null;
+				let drift = [];
+				const enter = () => {
+					tl?.progress( 1 ).kill();
+					tl = build( story );
+					drift = [ ...story.querySelectorAll( '.cpStory_row' ) ].map( ( r ) => {
+						const dir = Number( r.dataset.dir );
+						return gsap.fromTo( r, { xPercent: dir > 0 ? 0 : -16 }, { xPercent: dir > 0 ? -16 : 0, duration: 26, ease: 'none', repeat: -1, yoyo: true } );
+					} );
+				};
+				const leave = () => {
+					drift.forEach( ( d ) => d.kill() );
+					drift = [];
+				};
+				story.addEventListener( 'deck:enter', enter );
+				story.addEventListener( 'deck:leave', leave );
+				return () => {
+					story.removeEventListener( 'deck:enter', enter );
+					story.removeEventListener( 'deck:leave', leave );
+					leave();
+					tl?.kill();
+				};
+			} );
+			return () => offs.forEach( ( off ) => off() );
+		}
+
+		const ctx = gsap.context( () => {
+			stories.forEach( ( story ) => {
+				const tl = build( story );
+				tl.pause();
+				gsap.timeline( { scrollTrigger: { trigger: story, start: 'top 70%', once: true, onEnter: () => tl.play() } } );
 				if ( ! canHover ) {
 					return;
 				}
-				// Scrubbed: the brand word slides, each layer drifts at its own depth.
 				const scrub = { trigger: story, start: 'top bottom', end: 'bottom top', scrub: 0.6 };
-				story.querySelectorAll( '.cpStory_row' ).forEach( ( row ) => {
-					const dir = Number( row.dataset.dir );
-					gsap.fromTo( row, { xPercent: dir > 0 ? 0 : -22 }, { xPercent: dir > 0 ? -22 : 0, ease: 'none', scrollTrigger: scrub } );
+				story.querySelectorAll( '.cpStory_row' ).forEach( ( r ) => {
+					const dir = Number( r.dataset.dir );
+					gsap.fromTo( r, { xPercent: dir > 0 ? 0 : -18 }, { xPercent: dir > 0 ? -18 : 0, ease: 'none', scrollTrigger: scrub } );
 				} );
 				story.querySelectorAll( '.cpStory_layer' ).forEach( ( layer ) => {
 					const sp = Number( layer.dataset.speed );
-					gsap.fromTo( layer, { yPercent: sp * 14 }, { yPercent: -sp * 14, ease: 'none', scrollTrigger: scrub } );
+					gsap.fromTo( layer, { yPercent: sp * 12 }, { yPercent: -sp * 12, ease: 'none', scrollTrigger: scrub } );
 				} );
 			} );
 		}, root );
 		return () => ctx.revert();
-	}, [ stories ] );
-
-	return (
-		<div className="cpStories" ref={ root }>
-			{ stories.map( ( s, i ) => <Story key={ s.title } s={ s } n={ start + i } total={ total } flip={ ( start + i ) % 2 === 0 } /> ) }
-		</div>
-	);
+	}, [ present ] ); // eslint-disable-line react-hooks/exhaustive-deps
 }
