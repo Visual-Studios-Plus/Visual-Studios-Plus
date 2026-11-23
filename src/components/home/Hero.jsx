@@ -15,7 +15,7 @@ const INTRO = 'Visual Studios Plus shape how your brand looks, how it lives onli
 
 /*
  * The manifesto, as [text, key] pieces: read word by word as you scroll, key
- * phrases light up yellow.
+ * phrases light up yellow
  */
 const MANIFESTO = [
 	[ 'Visual Studios Plus', true ], [ ' is a Colombo-based digital agency for brands that want to be ' ],
