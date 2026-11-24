@@ -8,8 +8,8 @@ import { useInView } from './DeckSlides.jsx';
  * Gallery slides: each of the deck's gallery pages as a live gallery built
  * from its own pictures, in one of three layouts —
  *
- *   grid   — a justified mosaic sized to the screen; the photos fly in from
- *            scattered angles and settle into place
+ *   grid   — an editorial slideshow: a large feature frame that cross-fades
+ *            with a slow zoom, a counter and a thumbnail rail
  *   phones — the reels in phone frames, rising one after another, then
  *            floating; a frame can play the campaign's video
  *   laptop — a laptop whose lid opens as the slide arrives, playing the film
@@ -17,15 +17,6 @@ import { useInView } from './DeckSlides.jsx';
  *
  * Any picture opens the viewer: full screen, arrows / keys / Esc to browse.
  */
-
-/* Row height for the mosaic, so the gallery fits one screen. */
-const rowHeight = ( n ) => ( n <= 2 ? 56 : n <= 4 ? 34 : n <= 6 ? 29 : n <= 9 ? 23.5 : 19 );
-
-/* Scatter for the mosaic entrance, stable per tile. */
-const scatter = ( i ) => {
-	const a = ( i * 137.5 * Math.PI ) / 180;
-	return { '--sx': `${ Math.cos( a ) * 26 }vw`, '--sy': `${ Math.sin( a ) * 22 }vh`, '--sr': `${ ( ( i * 53 ) % 30 ) - 15 }deg`, '--i': i };
-};
 
 function Viewer( { items, index, onIndex, onClose, title } ) {
 	const it = items[ index ];
@@ -113,25 +104,93 @@ function useSlideVideo( slide, vid ) {
 	}, [ slide, vid ] );
 }
 
-function Grid( { media, open } ) {
-	const h = rowHeight( media.length );
-	if ( media.length === 1 ) {
-		const m = media[ 0 ];
+/* True while the slide is showing (presentation: deck events; else on screen). */
+function useSlideActive( slide ) {
+	const [ on, setOn ] = useState( false );
+	useEffect( () => {
+		const s = slide.current;
+		if ( ! s ) {
+			return undefined;
+		}
+		const enter = () => setOn( true );
+		const leave = () => setOn( false );
+		s.addEventListener( 'deck:enter', enter );
+		s.addEventListener( 'deck:leave', leave );
+		const io = new IntersectionObserver( ( [ e ] ) => {
+			if ( ! s.closest( '.cpDeck--present' ) ) {
+				setOn( e.isIntersecting );
+			}
+		}, { threshold: 0.4 } );
+		io.observe( s );
+		return () => {
+			s.removeEventListener( 'deck:enter', enter );
+			s.removeEventListener( 'deck:leave', leave );
+			io.disconnect();
+		};
+	}, [ slide ] );
+	return on;
+}
+
+const HOLD = 3600; // ms each photo holds in the slideshow
+
+/*
+ * The photo gallery as an editorial slideshow: a large feature frame that
+ * cross-fades with a slow zoom, a big counter, and a thumbnail rail; it
+ * advances on its own while the slide is up (paused on hover), and any
+ * thumbnail shows that photo. The feature opens the viewer.
+ */
+function Grid( { media, open, slide } ) {
+	const [ at, setAt ] = useState( 0 );
+	const [ hold, setHold ] = useState( false );
+	const active = useSlideActive( slide );
+	const n = media.length;
+
+	useEffect( () => {
+		if ( ! active ) {
+			setAt( 0 );
+		}
+	}, [ active ] );
+
+	useEffect( () => {
+		if ( ! active || hold || reduced || n < 2 ) {
+			return undefined;
+		}
+		const t = setTimeout( () => setAt( ( k ) => ( k + 1 ) % n ), HOLD );
+		return () => clearTimeout( t );
+	}, [ active, hold, at, n ] );
+
+	if ( n === 1 ) {
 		return (
 			<button type="button" className="cpGal_hero" onClick={ () => open( 0 ) } aria-label="View full size">
-				<img src={ m.src } alt="" loading="lazy" decoding="async" />
+				<img src={ media[ 0 ].src } alt="" loading="lazy" decoding="async" />
 			</button>
 		);
 	}
+
 	return (
-		<div className="cpGal_grid" style={ { '--row': `${ h }vh` } }>
-			{ media.map( ( m, i ) => (
-				<button type="button" key={ m.src } className="cpGal_tile" onClick={ () => open( i ) }
-					style={ { '--ar': m.w / m.h, ...scatter( i ) } } aria-label={ `View picture ${ i + 1 }` }>
-					<img src={ m.src } alt="" loading="lazy" decoding="async" />
-				</button>
-			) ) }
-			<span className="cpGal_fill" aria-hidden="true" />
+		<div className="cpGal_show" onMouseEnter={ () => setHold( true ) } onMouseLeave={ () => setHold( false ) }>
+			<button type="button" className="cpGal_stage" onClick={ () => open( at ) } aria-label={ `View photograph ${ at + 1 } full size` }>
+				{ media.map( ( m, i ) => (
+					<img key={ m.src } src={ m.src } alt="" loading="lazy" decoding="async"
+						className={ i === at ? 'is-on' : undefined } style={ { '--ar': m.w / m.h } } />
+				) ) }
+				<span className="cpGal_timer" aria-hidden="true">
+					<i key={ `${ at }-${ active && ! hold }` } className={ active && ! hold ? 'is-running' : undefined } style={ { '--hold': `${ HOLD }ms` } } />
+				</span>
+			</button>
+			<div className="cpGal_side">
+				<p className="cpGal_index" aria-live="polite"><b>{ pad( at + 1 ) }</b><span>/ { pad( n ) }</span></p>
+				<ul className="cpGal_thumbs" style={ { '--cols': n > 6 ? 3 : 2 } }>
+					{ media.map( ( m, i ) => (
+						<li key={ m.src } style={ { '--i': i } }>
+							<button type="button" className={ i === at ? 'is-on' : undefined } onClick={ () => setAt( i ) }
+								aria-label={ `Show photograph ${ i + 1 }` } aria-current={ i === at || undefined }>
+								<img src={ m.src } alt="" loading="lazy" decoding="async" />
+							</button>
+						</li>
+					) ) }
+				</ul>
+			</div>
 		</div>
 	);
 }
@@ -145,10 +204,18 @@ function Phones( { media, open, text, slide } ) {
 				{ media.map( ( m, i ) => (
 					<button type="button" key={ m.src } className="cpGal_phone" onClick={ () => open( i ) }
 						style={ { '--i': i } } aria-label={ m.video ? 'Play the reel' : `View screen ${ i + 1 }` }>
-						<span className="cpGal_screen">
-							{ m.video
-								? <video ref={ vid } data-src={ m.video } poster={ m.src } muted loop playsInline preload="none" aria-hidden="true" />
-								: <img src={ m.src } alt="" loading="lazy" decoding="async" /> }
+						<span className="cpGal_key cpGal_key--action" aria-hidden="true" />
+						<span className="cpGal_key cpGal_key--up" aria-hidden="true" />
+						<span className="cpGal_key cpGal_key--down" aria-hidden="true" />
+						<span className="cpGal_key cpGal_key--power" aria-hidden="true" />
+						<span className="cpGal_bezel">
+							<span className="cpGal_screen">
+								{ m.video
+									? <video ref={ vid } data-src={ m.video } poster={ m.src } muted loop playsInline preload="none" aria-hidden="true" />
+									: <img src={ m.src } alt="" loading="lazy" decoding="async" /> }
+							</span>
+							<span className="cpGal_island" aria-hidden="true" />
+							<span className="cpGal_glare" aria-hidden="true" />
 						</span>
 					</button>
 				) ) }
@@ -201,7 +268,7 @@ export default function DeckGallery( { page, bg, ink, caption, label } ) {
 					<span> · Click to view</span>
 				</p>
 			</header>
-			{ g.layout === 'grid' && <Grid media={ g.media } open={ open } /> }
+			{ g.layout === 'grid' && <Grid media={ g.media } open={ open } slide={ ref } /> }
 			{ g.layout === 'phones' && <Phones media={ g.media } open={ open } text={ g.text } slide={ ref } /> }
 			{ g.layout === 'laptop' && <Laptop media={ g.media } open={ open } text={ g.text } video={ g.video } slide={ ref } /> }
 			{ at >= 0 && <Viewer items={ items } index={ at } onIndex={ setAt } onClose={ () => setAt( -1 ) } title={ caption } /> }
