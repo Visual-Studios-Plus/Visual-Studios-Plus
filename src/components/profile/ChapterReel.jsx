@@ -4,7 +4,7 @@ import { gsap, reduced, canHover } from '../../lib/motion.js';
 /*
  * Chapter reel — a 3D camera fly-through (after the "motion graphics" web
  * reference): the chapter's video card sits in the middle of a composition
- * of brand logos, campaign frames and a pill, each at its own depth. As you scroll the camera pushes in: the
+ * of brand logos and campaign frames, each at its own depth. As you scroll the camera pushes in: the
  * foreground swells, blurs and flies past, until the video fills the screen
  * with the chapter title on it.
  *
@@ -22,7 +22,6 @@ const LAYOUT = {
 	cardB: { x: 25, y: -21, z: -180, w: 15 },
 	cardC: { x: -25, y: 21, z: 140, w: 12.5 },
 	cardD: { x: 23, y: 23, z: 430, w: 10 },
-	pill: { x: 13, y: 18, z: 300 },
 	markE: { x: 31, y: 2, z: -320, w: 5.5 }
 };
 
@@ -34,7 +33,7 @@ const place = ( k ) => {
 	};
 };
 
-export default function ChapterReel( { video, still, label, kicker, count, cards = [], marks = [], accent, present = false } ) {
+export default function ChapterReel( { video, still, label, kicker, cards = [], marks = [], accent, present = false } ) {
 	const root = useRef( null );
 	const vid = useRef( null );
 
@@ -94,7 +93,8 @@ export default function ChapterReel( { video, still, label, kicker, count, cards
 
 	// The fly-through.
 	useLayoutEffect( () => {
-		if ( reduced || ! canHover || ! root.current ) {
+		// Narrow screens (touch or not) get the still composition: the fly-through is sized for wide ones.
+		if ( reduced || ! canHover || window.innerWidth < 900 || ! root.current ) {
 			return undefined;
 		}
 		const el = root.current;
@@ -185,7 +185,6 @@ export default function ChapterReel( { video, still, label, kicker, count, cards
 
 					{ c && <figure className="cpDolly_layer cpDolly_img" data-k="cardC" style={ place( 'cardC' ) }><img src={ c } alt="" loading="lazy" decoding="async" /></figure> }
 					{ ma && <span className="cpDolly_layer cpDolly_mark" data-k="markA" style={ place( 'markA' ) }><img src={ ma } alt="" loading="lazy" decoding="async" /></span> }
-					<span className="cpDolly_layer cpDolly_pill" data-k="pill" style={ place( 'pill' ) }>{ count } { count === 1 ? 'project' : 'projects' }</span>
 					{ d && <figure className="cpDolly_layer cpDolly_img" data-k="cardD" style={ place( 'cardD' ) }><img src={ d } alt="" loading="lazy" decoding="async" /></figure> }
 				</div>
 			</div>

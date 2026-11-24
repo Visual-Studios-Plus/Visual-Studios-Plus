@@ -114,7 +114,7 @@ export default function CorporateProfile() {
 						<Fragment key={ ch.id }>
 							<section className="cpSlide cpDeckReel" id={ ch.id } data-slide={ ch.label } data-cat={ ch.id }>
 								<ChapterReel video={ ch.reel } still={ F( ch.figure ) } label={ ch.label } kicker={ ch.kicker }
-									count={ items.length } accent={ items[ 0 ].accent } cards={ dollyCards( items ) } marks={ dollyMarks( items ) } present={ present } />
+									accent={ items[ 0 ].accent } cards={ dollyCards( items ) } marks={ dollyMarks( items ) } present={ present } />
 							</section>
 
 							{ ch.lead && ch.lead.map( ( [ page, caption ] ) => (
