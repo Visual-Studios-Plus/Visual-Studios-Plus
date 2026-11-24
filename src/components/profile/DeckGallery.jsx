@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import GALLERIES from '../../data/profileGalleries.js';
 import { pad, reduced, ytEmbed } from '../../lib/motion.js';
 import { useInView } from './DeckSlides.jsx';
-import { Ring, Loupe, Feature, Brut } from './PhotoShowcase.jsx';
+import { Ring, Loupe, Wall, Brut } from './PhotoShowcase.jsx';
 
 /*
  * Gallery slides: each of the deck's gallery pages as a live gallery built
@@ -15,7 +15,7 @@ import { Ring, Loupe, Feature, Brut } from './PhotoShowcase.jsx';
  *            floating; a frame can play the campaign's video
  *   laptop — a laptop whose lid opens as the slide arrives, playing the film
  *            (or the film's still, drifting), with the page's copy beside it
- *   ring / loupe / feature / brut — the interactive photography layouts
+ *   ring / loupe / wall / brut — the interactive photography layouts
  *            (see PhotoShowcase.jsx)
  *
  * Any picture opens the viewer: full screen, arrows / keys / Esc to browse.
@@ -266,7 +266,7 @@ function Laptop( { media, open, text, video, yt, slide } ) {
 const HINT = {
 	ring: ( n ) => `${ n } photographs · Drag to turn`,
 	loupe: ( n ) => `${ n } pieces · Hover to inspect`,
-	feature: () => 'Campaign · Click to view',
+	wall: ( n ) => `${ n } photographs · Drag to walk the wall`,
 	brut: ( n ) => `${ n } plates · Click to view`
 };
 
@@ -298,7 +298,7 @@ export default function DeckGallery( { page, bg, ink, caption, label, cat } ) {
 			{ g.layout === 'laptop' && <Laptop media={ g.media } open={ open } text={ g.text } video={ g.video } yt={ g.yt } slide={ ref } /> }
 			{ g.layout === 'ring' && <Ring media={ g.media } open={ open } active={ active } /> }
 			{ g.layout === 'loupe' && <Loupe media={ g.media } open={ open } /> }
-			{ g.layout === 'feature' && <Feature media={ g.media } open={ open } /> }
+			{ g.layout === 'wall' && <Wall media={ g.media } open={ open } active={ active } /> }
 			{ g.layout === 'brut' && <Brut media={ g.media } open={ open } /> }
 			{ at >= 0 && <Viewer items={ items } index={ at } onIndex={ setAt } onClose={ () => setAt( -1 ) } title={ caption } /> }
 		</section>

@@ -1799,66 +1799,119 @@ body:has(.cpDeck) .BackToTop_Wrap { display: none !important; }
 	transition: opacity 0.25s ease;
 }
 
-/* ---------- Feature: one campaign photograph, tilting with a sheen ---------- */
+/* ---------- Wall: a gallery wall you walk along ---------- */
 
-.phFeature {
+.phWall {
 	display: grid;
-	place-items: center;
+	gap: clamp(0.8rem, 2vh, 1.4rem);
 	width: 100%;
-	perspective: 1600px;
 }
 
-.phFeature_card {
-	--rx: 0deg;
-	--ry: 0deg;
-	--gx: 50%;
-	--gy: 50%;
-	--go: 0;
+/* Full bleed: the wall runs past the slide's margins. */
+.phWall_view {
 	position: relative;
-	display: block;
-	width: min(100%, calc((100vh - 15rem) * var(--ar)));
-	aspect-ratio: var(--ar);
-	border-radius: 18px;
-	cursor: zoom-in;
-	transform: rotateX(var(--rx)) rotateY(var(--ry));
-	transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-	box-shadow: 0 60px 120px -50px rgba(0, 0, 0, 0.55);
-}
-
-.phFeature_frame {
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
+	width: 100vw;
+	margin-left: calc(50% - 50vw);
+	height: calc(100vh - 17rem);
 	overflow: hidden;
-	clip-path: inset(14% 14% 14% 14% round 18px);
-	transition: clip-path 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+	cursor: grab;
+	touch-action: pan-y;
+	user-select: none;
 }
 
-.cpGal.is-in .phFeature_frame { clip-path: inset(0 0 0 0 round 18px); }
+.phWall_view:active { cursor: grabbing; }
 
-.phFeature_frame img {
+.phWall_track {
+	display: flex;
+	align-items: center;
+	gap: clamp(1.2rem, 2.6vw, 2.6rem);
+	height: 100%;
+	width: max-content;
+	padding: 0 var(--gutter);
+	will-change: transform;
+}
+
+/* Each print: its own proportions; every other one hung a little lower and smaller. */
+.phWall_frame {
+	position: relative;
+	flex: none;
+	height: 100%;
+	aspect-ratio: var(--ar);
+	padding: 0 !important;
+	cursor: zoom-in !important;
+	opacity: 0;
+	transform: translateX(14vw);
+	transition: opacity 0.8s ease, transform 1.3s cubic-bezier(0.16, 1, 0.3, 1), translate 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+	transition-delay: calc(var(--i) * 70ms), calc(var(--i) * 70ms), 0s;
+}
+
+.phWall_frame.is-short { height: 76%; align-self: flex-end; margin-bottom: 3vh; }
+.cpGal.is-in .phWall_frame { opacity: 1; transform: none; }
+
+.phWall_img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	box-shadow: 0 30px 60px -34px rgba(0, 0, 0, 0.55);
+	transition: box-shadow 0.5s ease;
+}
+
+/* The print drifts inside its frame as the wall moves. */
+.phWall_img img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	transform: scale(1.18);
-	transition: transform 2.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.cpGal.is-in .phFeature_frame img {
-	transform: scale(1);
-	animation: cpDrift 20s ease-in-out 2.4s infinite alternate;
-}
-
-/* A glossy highlight that follows the cursor. */
-.phFeature_sheen {
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	background: radial-gradient(circle at var(--gx) var(--gy), rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0) 45%);
-	mix-blend-mode: soft-light;
-	opacity: var(--go);
-	transition: opacity 0.5s ease;
+	scale: 1.14;
+	translate: var(--px, 0) 0;
 	pointer-events: none;
+}
+
+.phWall_frame:hover { translate: 0 -10px; }
+.phWall_frame:hover .phWall_img { box-shadow: 0 50px 80px -34px rgba(0, 0, 0, 0.65); }
+
+.phWall_no {
+	position: absolute;
+	left: 0;
+	bottom: -1.6rem;
+	font-family: var(--font-display);
+	font-size: 0.68rem;
+	letter-spacing: 0.16em;
+	opacity: 0.55;
+}
+
+.phWall_bar {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	width: min(100%, 34rem);
+	margin: 0 auto;
+}
+
+.phWall_bar button {
+	flex: none;
+	width: 2.75rem;
+	height: 2.75rem;
+	border: 1px solid color-mix(in srgb, var(--ink, #fff) 35%, transparent) !important;
+	border-radius: 50%;
+	cursor: pointer !important;
+	transition: background 0.25s, color 0.25s;
+}
+
+.phWall_bar button:hover { background: var(--ink, #fff) !important; color: var(--bg, #000) !important; }
+
+.phWall_line {
+	position: relative;
+	flex: 1;
+	height: 1px;
+	background: color-mix(in srgb, var(--ink, #fff) 20%, transparent);
+}
+
+.phWall_line i {
+	position: absolute;
+	inset: -1px 0;
+	background: var(--ink, #fff);
+	transform-origin: 0 50%;
 }
 
 /* ---------- Brut: a brutalist, minimal grid for food ---------- */
@@ -1970,7 +2023,7 @@ body:has(.cpDeck) .BackToTop_Wrap { display: none !important; }
 	.phLoupe_panel { flex: none; height: 4.2rem; transition-property: height, opacity, transform; }
 	.phLoupe_panel.is-open { flex: none; height: 24rem; }
 	.phLoupe_lens { display: none; }
-	.phFeature_card { width: 100%; }
+	.phWall_view { height: 24rem; }
 	.phBrut { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; height: auto; }
 	.phBrut_cell { aspect-ratio: 1; }
 	.phBrut_cell.is-lead { grid-row: span 1; aspect-ratio: 1; }
@@ -1980,8 +2033,7 @@ body:has(.cpDeck) .BackToTop_Wrap { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
 	.phLoupe_panel,
 	.phRing_stage,
-	.phFeature_card,
-	.phFeature_frame { transition: none; }
+	.phWall_frame { transition: none; }
 }
 
 

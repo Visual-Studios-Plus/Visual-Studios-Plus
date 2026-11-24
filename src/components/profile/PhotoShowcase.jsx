@@ -10,8 +10,9 @@ import { gsap, pad, reduced, canHover } from '../../lib/motion.js';
  *   Loupe — an exhibition accordion: tall panels open on hover/tap, and a
  *           jeweller's loupe follows the cursor over the open photograph,
  *           magnifying the full-resolution file.
- *   Feature — one campaign photograph on its own, tilting toward the
- *           cursor with a glossy sheen.
+ *   Wall  — a gallery wall: prints at their own proportions along one long
+ *           wall; drag to walk it with momentum, each print drifting in its
+ *           frame.
  *   Brut  — a brutalist, minimal grid for food: hairline rules, mono
  *           numbers, a heavy word; dishes wipe in and zoom on hover.
  *
@@ -204,49 +205,172 @@ export function Loupe( { media, open } ) {
 	);
 }
 
-/* ---------- Feature ---------- */
+/* ---------- Wall ---------- */
 
 /*
- * One campaign photograph, on its own: a cinematic reveal and slow drift;
- * the frame tilts toward the cursor with a light sheen gliding across it,
- * like a glossy print in the hand. A click opens it.
+ * A gallery wall: photographs hung at their own proportions and alternating
+ * heights along one long wall. Drag (or swipe, or scroll sideways) to walk
+ * it, with momentum and soft ends; each print drifts inside its frame as it
+ * passes, frames lift on hover, a line shows where you are, a click opens.
  */
-export function Feature( { media, open } ) {
-	const m = media[ 0 ];
-	const card = useRef( null );
+export function Wall( { media, open, active } ) {
+	const view = useRef( null );
+	const track = useRef( null );
+	const st = useRef( { x: 0, v: 0, drag: false, moved: false, raf: 0 } );
+	const [ prog, setProg ] = useState( 0 );
 
-	const onMove = ( e ) => {
-		const el = card.current;
-		if ( ! el || reduced || ! canHover ) {
+	const limits = () => {
+		const vw = view.current?.clientWidth || 0;
+		const tw = track.current?.scrollWidth || 0;
+		return Math.min( 0, vw - tw );
+	};
+
+	const render = () => {
+		const s = st.current;
+		const t = track.current;
+		const v = view.current;
+		if ( ! t || ! v ) {
 			return;
 		}
-		const r = el.getBoundingClientRect();
-		const x = ( e.clientX - r.left ) / r.width - 0.5;
-		const y = ( e.clientY - r.top ) / r.height - 0.5;
-		el.style.setProperty( '--ry', `${ ( x * 9 ).toFixed( 2 ) }deg` );
-		el.style.setProperty( '--rx', `${ ( -y * 7 ).toFixed( 2 ) }deg` );
-		el.style.setProperty( '--gx', `${ ( ( x + 0.5 ) * 100 ).toFixed( 1 ) }%` );
-		el.style.setProperty( '--gy', `${ ( ( y + 0.5 ) * 100 ).toFixed( 1 ) }%` );
-		el.style.setProperty( '--go', '1' );
+		t.style.transform = `translate3d(${ s.x.toFixed( 1 ) }px, 0, 0)`;
+		const mid = v.clientWidth / 2;
+		[ ...t.children ].forEach( ( el ) => {
+			const c = el.offsetLeft + el.offsetWidth / 2 + s.x - mid;
+			el.style.setProperty( '--px', `${ ( -c * 0.06 ).toFixed( 1 ) }px` );
+		} );
+		const min = limits();
+		setProg( min ? s.x / min : 0 );
 	};
-	const onLeave = () => {
-		const el = card.current;
-		if ( el ) {
-			el.style.setProperty( '--ry', '0deg' );
-			el.style.setProperty( '--rx', '0deg' );
-			el.style.setProperty( '--go', '0' );
+
+	const run = () => {
+		const s = st.current;
+		if ( s.raf ) {
+			return;
 		}
+		let last = performance.now();
+		const tick = ( now ) => {
+			const dt = Math.min( 0.04, ( now - last ) / 1000 );
+			last = now;
+			const min = limits();
+			if ( ! s.drag ) {
+				s.x += s.v * dt;
+				s.v *= Math.pow( 0.04, dt ); // friction
+				// Soft ends: pulled back when past either end.
+				if ( s.x > 0 ) {
+					s.x += ( 0 - s.x ) * Math.min( 1, dt * 10 );
+					s.v *= 0.8;
+				} else if ( s.x < min ) {
+					s.x += ( min - s.x ) * Math.min( 1, dt * 10 );
+					s.v *= 0.8;
+				}
+			}
+			render();
+			const still = ! s.drag && Math.abs( s.v ) < 4 && s.x <= 0.5 && s.x >= min - 0.5;
+			s.raf = still ? 0 : requestAnimationFrame( tick );
+		};
+		s.raf = requestAnimationFrame( tick );
+	};
+
+	useEffect( () => {
+		render();
+		const onResize = () => render();
+		window.addEventListener( 'resize', onResize );
+		return () => {
+			window.removeEventListener( 'resize', onResize );
+			cancelAnimationFrame( st.current.raf );
+			st.current.raf = 0;
+		};
+	}, [] ); // eslint-disable-line react-hooks/exhaustive-deps
+
+	// Back to the start of the wall whenever the slide comes round again.
+	useEffect( () => {
+		if ( ! active ) {
+			st.current.x = 0;
+			st.current.v = 0;
+			render();
+		}
+	}, [ active ] ); // eslint-disable-line react-hooks/exhaustive-deps
+
+	const onDown = ( e ) => {
+		if ( e.button > 0 ) {
+			return;
+		}
+		const s = st.current;
+		const x0 = e.clientX;
+		const sx = s.x;
+		let lx = x0;
+		let lt = performance.now();
+		s.drag = true;
+		s.moved = false;
+		s.v = 0;
+		run();
+		const min = limits();
+		const move = ( ev ) => {
+			const now = performance.now();
+			if ( Math.abs( ev.clientX - x0 ) > 5 ) {
+				s.moved = true;
+			}
+			let x = sx + ( ev.clientX - x0 );
+			// Resistance past the ends.
+			if ( x > 0 ) {
+				x *= 0.35;
+			} else if ( x < min ) {
+				x = min + ( x - min ) * 0.35;
+			}
+			s.x = x;
+			s.v = ( ev.clientX - lx ) / Math.max( 0.008, ( now - lt ) / 1000 );
+			lx = ev.clientX;
+			lt = now;
+		};
+		const up = () => {
+			s.drag = false;
+			window.removeEventListener( 'pointermove', move );
+			window.removeEventListener( 'pointerup', up );
+		};
+		window.addEventListener( 'pointermove', move );
+		window.addEventListener( 'pointerup', up );
+	};
+
+	// A sideways trackpad scroll walks the wall too.
+	const onWheel = ( e ) => {
+		if ( Math.abs( e.deltaX ) <= Math.abs( e.deltaY ) ) {
+			return;
+		}
+		e.stopPropagation();
+		const s = st.current;
+		s.x = Math.max( limits() - 40, Math.min( 40, s.x - e.deltaX ) );
+		s.v = 0;
+		run();
+	};
+
+	const step = ( d ) => {
+		const s = st.current;
+		s.v = 0;
+		const w = view.current.clientWidth * 0.6;
+		const to = Math.max( limits(), Math.min( 0, s.x - d * w ) );
+		s.drag = true;
+		gsap.to( s, { x: to, duration: 1, ease: 'expo.out', onUpdate: render, onComplete: () => ( s.drag = false ) } );
 	};
 
 	return (
-		<div className="phFeature" onMouseMove={ onMove } onMouseLeave={ onLeave }>
-			<button type="button" className="phFeature_card" ref={ card } onClick={ () => open( 0 ) }
-				style={ { '--ar': m.w / m.h } } aria-label="Open the campaign photograph full size">
-				<span className="phFeature_frame">
-					<img src={ m.full || m.src } alt="" decoding="async" draggable="false" />
-				</span>
-				<span className="phFeature_sheen" aria-hidden="true" />
-			</button>
+		<div className="phWall">
+			<div className="phWall_view" ref={ view } onPointerDown={ onDown } onWheel={ onWheel }>
+				<div className="phWall_track" ref={ track }>
+					{ media.map( ( m, i ) => (
+						<button type="button" key={ m.src } className={ `phWall_frame${ i % 2 ? ' is-short' : '' }` }
+							style={ { '--ar': m.w / m.h, '--i': i } }
+							onClick={ () => ! st.current.moved && open( i ) } aria-label={ `Open photograph ${ i + 1 }` }>
+							<span className="phWall_img"><img src={ m.src } alt="" loading="lazy" decoding="async" draggable="false" /></span>
+							<span className="phWall_no">{ pad( i + 1 ) }</span>
+						</button>
+					) ) }
+				</div>
+			</div>
+			<div className="phWall_bar">
+				<button type="button" onClick={ () => step( -1 ) } aria-label="Back along the wall">←</button>
+				<span className="phWall_line" aria-hidden="true"><i style={ { transform: `scaleX(${ Math.max( 0.04, prog ).toFixed( 3 ) })` } } /></span>
+				<button type="button" onClick={ () => step( 1 ) } aria-label="Further along the wall">→</button>
+			</div>
 		</div>
 	);
 }

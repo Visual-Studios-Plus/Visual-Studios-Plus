@@ -65,7 +65,7 @@ const CHAPTERS = [
 		id: 'photography', short: 'Photography', no: 5, kind: 'Commercial Photography', label: 'Photography Projects',
 		figure: 'DJI_0078-HDR.webp', reel: '/assets/projects/heritance.mp4', kicker: 'Frames that sell the experience.',
 		// The portfolio spreads come before Sapphire Dragon.
-		lead: [ [ 57, 'Hospitality, interior & architecture' ], [ 58, 'High jewellery' ], [ 59, 'Raspberry — jewellery campaign' ], [ 60, 'Food photography' ] ]
+		lead: [ [ 57, 'Hospitality, interior & architecture' ], [ 58, 'High jewellery' ], [ 59, 'Fashion & accessories' ], [ 60, 'Food photography' ] ]
 	}
 ];
 

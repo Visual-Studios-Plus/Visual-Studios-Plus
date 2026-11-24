@@ -5,7 +5,7 @@
  *
  *   layout — 'grid' (a slideshow), 'phones' (reels in phone frames),
  *            'laptop' (a laptop that opens, playing the film), or for the
- *            photography pages 'ring', 'loupe', 'feature', 'brut'
+ *            photography pages 'ring', 'loupe', 'wall', 'brut'
  *   media  — { src, w, h, full?, video? }, in reading order
  *   text   — the page's copy, set beside a laptop / under phones
  *   video  — the film a laptop plays (a file)
@@ -700,12 +700,102 @@ export default {
 		"text": "From conceptualisation to post-production, we handled the full creative and executional scope of DSI’s Women’s Day video — fast turnarounds, shifting creative and detailed planning, brought to life as a story of the strength and everyday journeys of Sri Lankan women."
 	},
 	"59": {
-		"layout": "feature",
+		"layout": "wall",
 		"media": [
 			{
 				"src": "/assets/profile/g/p59-0.webp",
 				"w": 800,
 				"h": 450
+			},
+			{
+				"src": "/assets/photos/thumb/3.webp",
+				"full": "/assets/photos/full/3.webp",
+				"w": 1000,
+				"h": 1498
+			},
+			{
+				"src": "/assets/photos/thumb/5.webp",
+				"full": "/assets/photos/full/5.webp",
+				"w": 1000,
+				"h": 1498
+			},
+			{
+				"src": "/assets/photos/thumb/DSC9063-as-Smart-Object-1.webp",
+				"full": "/assets/photos/full/DSC9063-as-Smart-Object-1.webp",
+				"w": 1000,
+				"h": 1498
+			},
+			{
+				"src": "/assets/photos/thumb/Tiesh-7077-1.webp",
+				"full": "/assets/photos/full/Tiesh-7077-1.webp",
+				"w": 1000,
+				"h": 1498
+			},
+			{
+				"src": "/assets/photos/thumb/1.webp",
+				"full": "/assets/photos/full/1.webp",
+				"w": 1500,
+				"h": 1001
+			},
+			{
+				"src": "/assets/photos/thumb/DSC5285-1.webp",
+				"full": "/assets/photos/full/DSC5285-1.webp",
+				"w": 750,
+				"h": 1123
+			},
+			{
+				"src": "/assets/photos/thumb/DSC9031-1.webp",
+				"full": "/assets/photos/full/DSC9031-1.webp",
+				"w": 1000,
+				"h": 1498
+			},
+			{
+				"src": "/assets/photos/thumb/7.webp",
+				"full": "/assets/photos/full/7.webp",
+				"w": 2400,
+				"h": 1602
+			},
+			{
+				"src": "/assets/photos/thumb/4.webp",
+				"full": "/assets/photos/full/4.webp",
+				"w": 1500,
+				"h": 1001
+			},
+			{
+				"src": "/assets/photos/thumb/DSC9805-1.webp",
+				"full": "/assets/photos/full/DSC9805-1.webp",
+				"w": 1500,
+				"h": 1001
+			},
+			{
+				"src": "/assets/photos/thumb/Tiesh-7287-1.webp",
+				"full": "/assets/photos/full/Tiesh-7287-1.webp",
+				"w": 1000,
+				"h": 1498
+			},
+			{
+				"src": "/assets/photos/thumb/DSC5425-1.webp",
+				"full": "/assets/photos/full/DSC5425-1.webp",
+				"w": 750,
+				"h": 1123
+			},
+			{
+				"src": "/assets/photos/thumb/2.webp",
+				"full": "/assets/photos/full/2.webp",
+				"w": 2000,
+				"h": 1335
+			},
+			{
+				"src": "/assets/photos/thumb/DSC3681-as-Smart-Object-1.webp",
+				"full": "/assets/photos/full/DSC3681-as-Smart-Object-1.webp",
+				"w": 1000,
+				"h": 1499
+			},
+			{
+				"src": "/assets/photos/thumb/DSC9563-1.webp",
+				"full": "/assets/photos/full/DSC9563-1.webp",
+				"w": 1500,
+				"h": 1001
 			}
 		]
 	},
