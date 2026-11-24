@@ -150,7 +150,7 @@ export function DeckHud( { root, deck } ) {
 			}
 		};
 		const onKey = ( e ) => {
-			if ( e.target.closest( 'input, textarea, select, [contenteditable], video' ) || document.body.classList.contains( 'menu-open' ) ) {
+			if ( e.target.closest?.( 'input, textarea, select, [contenteditable], video' ) || document.body.classList.contains( 'menu-open' ) ) {
 				return;
 			}
 			const next = [ 'ArrowDown', 'ArrowRight', 'PageDown', ' ' ].includes( e.key );

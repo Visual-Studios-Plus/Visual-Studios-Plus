@@ -197,7 +197,7 @@ export default function useDeck( root, enabled ) {
 		};
 
 		const onKey = ( e ) => {
-			if ( e.target.closest( 'input, textarea, select, [contenteditable], video' ) || document.body.classList.contains( 'menu-open' ) || document.body.classList.contains( 'pv-open' ) ) {
+			if ( e.target.closest?.( 'input, textarea, select, [contenteditable], video' ) || document.body.classList.contains( 'menu-open' ) || document.body.classList.contains( 'pv-open' ) ) {
 				return;
 			}
 			const map = { ArrowDown: 1, ArrowRight: 1, PageDown: 1, ' ': 1, ArrowUp: -1, ArrowLeft: -1, PageUp: -1 };
