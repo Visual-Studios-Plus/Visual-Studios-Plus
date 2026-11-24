@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import GALLERIES from '../../data/profileGalleries.js';
-import { pad, reduced } from '../../lib/motion.js';
+import { pad, reduced, ytEmbed } from '../../lib/motion.js';
 import { useInView } from './DeckSlides.jsx';
 
 /*
@@ -47,9 +47,12 @@ function Viewer( { items, index, onIndex, onClose, title } ) {
 	return createPortal(
 		<div className="pvViewer" role="dialog" aria-modal="true" aria-label={ `${ title } — gallery` } onClick={ onClose }>
 			<div className="pvViewer_stage" onClick={ ( e ) => e.stopPropagation() }>
-				{ it.video
-					? <video key={ it.video } src={ it.video } poster={ it.src } autoPlay loop muted playsInline controls />
-					: <img key={ it.src } src={ it.full || it.src } alt={ `${ title } — ${ index + 1 } of ${ items.length }` } /> }
+				{ it.yt
+					? <iframe key={ it.yt } className="pvViewer_yt" src={ ytEmbed( it.yt, 'autoplay=1&controls=1' ) } title={ title }
+						allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
+					: it.video
+						? <video key={ it.video } src={ it.video } poster={ it.src } autoPlay loop muted playsInline controls />
+						: <img key={ it.src } src={ it.full || it.src } alt={ `${ title } — ${ index + 1 } of ${ items.length }` } /> }
 			</div>
 			<p className="pvViewer_meta">{ title } <span>{ pad( index + 1 ) } / { pad( items.length ) }</span></p>
 			<button type="button" className="pvViewer_close" onClick={ onClose } aria-label="Close gallery">✕</button>
@@ -225,18 +228,28 @@ function Phones( { media, open, text, slide } ) {
 	);
 }
 
-function Laptop( { media, open, text, video, slide } ) {
+function Laptop( { media, open, text, video, yt, slide } ) {
 	const vid = useRef( null );
 	useSlideVideo( slide, vid );
+	const active = useSlideActive( slide );
 	const m = media[ 0 ];
 	return (
 		<div className="cpGal_laptopWrap">
-			<button type="button" className="cpGal_laptop" onClick={ () => open( 0 ) } aria-label={ video ? 'Play the film full screen' : 'View full size' }>
+			<button type="button" className="cpGal_laptop" onClick={ () => open( 0 ) } aria-label={ video || yt ? 'Play the film with sound' : 'View full size' }>
 				<span className="cpGal_lid">
 					<span className="cpGal_display">
-						{ video
-							? <video ref={ vid } data-src={ video } poster={ m.src } muted loop playsInline preload="none" aria-hidden="true" />
-							: <img className="cpGal_drift" src={ m.src } alt="" loading="lazy" decoding="async" /> }
+						{ video && <video ref={ vid } data-src={ video } poster={ m.src } muted loop playsInline preload="none" aria-hidden="true" /> }
+						{ ! video && <img className="cpGal_drift" src={ m.src } alt="" loading="lazy" decoding="async" /> }
+						{ /* The YouTube film plays muted over its still, loaded only while the slide is up. */ }
+						{ yt && active && ! reduced && (
+							<iframe className="cpGal_yt" src={ ytEmbed( yt, `autoplay=1&mute=1&controls=0&loop=1&playlist=${ yt }&disablekb=1` ) }
+								title="" tabIndex={ -1 } aria-hidden="true" allow="autoplay; encrypted-media"
+								onLoad={ ( e ) => {
+									const f = e.currentTarget;
+									setTimeout( () => f.classList.add( 'is-ready' ), 900 ); // the still covers the player's load
+								} } />
+						) }
+						{ yt && <span className="cpGal_play" aria-hidden="true">▶</span> }
 					</span>
 				</span>
 				<span className="cpGal_base" aria-hidden="true" />
@@ -246,7 +259,7 @@ function Laptop( { media, open, text, video, slide } ) {
 	);
 }
 
-export default function DeckGallery( { page, bg, ink, caption, label } ) {
+export default function DeckGallery( { page, bg, ink, caption, label, cat } ) {
 	const g = GALLERIES[ page ];
 	const ref = useInView( 0.25 );
 	const [ at, setAt ] = useState( -1 );
@@ -254,12 +267,12 @@ export default function DeckGallery( { page, bg, ink, caption, label } ) {
 		return null;
 	}
 	// The viewer browses the pictures; a laptop's film plays in it too.
-	const items = g.layout === 'laptop' && g.video ? [ { ...g.media[ 0 ], video: g.video } ] : g.media;
+	const items = g.layout === 'laptop' && ( g.video || g.yt ) ? [ { ...g.media[ 0 ], video: g.video, yt: g.yt } ] : g.media;
 	const open = ( i ) => setAt( i );
 	const count = g.media.length;
 
 	return (
-		<section className={ `cpSlide cpGal cpGal--${ g.layout }` } ref={ ref } data-slide={ label }
+		<section className={ `cpSlide cpGal cpGal--${ g.layout }` } ref={ ref } data-slide={ label } data-cat={ cat }
 			style={ { '--bg': bg, '--ink': ink } } aria-label={ caption }>
 			<header className="cpGal_head">
 				<p className="cpGal_title">{ caption }</p>
@@ -270,7 +283,7 @@ export default function DeckGallery( { page, bg, ink, caption, label } ) {
 			</header>
 			{ g.layout === 'grid' && <Grid media={ g.media } open={ open } slide={ ref } /> }
 			{ g.layout === 'phones' && <Phones media={ g.media } open={ open } text={ g.text } slide={ ref } /> }
-			{ g.layout === 'laptop' && <Laptop media={ g.media } open={ open } text={ g.text } video={ g.video } slide={ ref } /> }
+			{ g.layout === 'laptop' && <Laptop media={ g.media } open={ open } text={ g.text } video={ g.video } yt={ g.yt } slide={ ref } /> }
 			{ at >= 0 && <Viewer items={ items } index={ at } onIndex={ setAt } onClose={ () => setAt( -1 ) } title={ caption } /> }
 		</section>
 	);

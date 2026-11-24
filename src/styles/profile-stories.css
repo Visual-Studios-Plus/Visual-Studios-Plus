@@ -326,7 +326,11 @@
 	.cpStory_grid,
 	.cpStory--flip .cpStory_grid { grid-template-columns: 1fr; gap: 1.5rem; }
 	.cpStory_stage,
-	.cpStory--flip .cpStory_stage { order: 0; height: 22rem; }
+	.cpStory--flip .cpStory_stage { order: 0; height: 19rem; }
+	.cpStory_copy { padding: 1.2rem 1.15rem; }
+	.cpStory_title { font-size: 1.55rem; }
+	.cpStory_text { font-size: 0.92rem; line-height: 1.55; }
+	.cpStory_metric { margin-top: 1.1rem; }
 	.cpStory_lead img { max-width: 70vw; max-height: 18rem; }
 	.cpStory_lead.is-cut img { max-width: 78vw; }
 	.cpStory_float img { width: 6.2rem; max-height: 8.5rem; }
@@ -489,16 +493,6 @@
 
 .cpDolly_mark--light { background: #fff; }
 
-.cpDolly_num {
-	font-family: var(--pf-serif, 'Instrument Serif', Georgia, serif);
-	font-style: italic;
-	font-size: 16vw;
-	line-height: 1;
-	color: transparent;
-	-webkit-text-stroke: 2px rgba(248, 246, 245, 0.85);
-	white-space: nowrap;
-}
-
 .cpDolly_pill {
 	padding: 0.7rem 1.3rem;
 	border-radius: 999px;
@@ -515,7 +509,7 @@
 /* Touch screens and reduced motion: the assembled composition, no fly-through. */
 @media (hover: none), (prefers-reduced-motion: reduce) {
 	.cpDolly { height: auto; }
-	.cpDolly_stage { position: relative; height: min(100vh, 135vw); }
+	.cpDolly_stage { position: relative; height: 100vh; height: 100svh; }
 	.cpDolly_cardOver { opacity: 1; }
 	.cpDolly_card { width: 78vw; height: auto; aspect-ratio: 16 / 10; }
 	.cpDolly_word { font-size: 6.5vw; }
@@ -523,7 +517,6 @@
 	.cpDolly_layer { transform: translate(-50%, -50%) translate(calc(var(--x) * 1.3), calc(var(--y) * 0.72)) scale(0.85); }
 	.cpDolly_img { width: calc(var(--w) * 1.8); }
 	.cpDolly_mark { width: calc(var(--w) * 1.8); }
-	.cpDolly_num { font-size: 26vw; opacity: 0.5; }
 	.cpDolly_pill { font-size: 0.7rem; }
 }
 
@@ -716,8 +709,9 @@ html.cp-present .siteFooter { display: none; }
 	flex: none;
 	padding: 0.9rem;
 	border-radius: 50%;
-	background: #2a2a2a;
-	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+	/* Light discs: most client logos are drawn for a light ground. */
+	background: #f3f2ee;
+	box-shadow: 0 12px 28px -16px rgba(0, 0, 0, 0.7);
 	animation: cpBob var(--f, 6s) ease-in-out infinite alternate;
 	animation-delay: calc(var(--i) * -0.37s);
 	transform: scale(0);
@@ -753,7 +747,14 @@ html.cp-present .siteFooter { display: none; }
 .cpHello.is-in .cpHello_copy > * { opacity: 1; transform: none; }
 
 @media (max-width: 900px) {
-	.cpHello { grid-template-columns: 1fr; padding-top: 7rem; }
+	.cpHello { grid-template-columns: 1fr; gap: 1.8rem; padding: 6.5rem var(--gutter) 4.5rem; align-content: center; }
+	.cpHello_title { margin-top: 1rem; font-size: clamp(3.6rem, 18vw, 5rem); }
+	.cpHello_lede { margin-top: 1rem; font-size: 0.95rem; }
+	.cpHello_logos { gap: 0.45rem; }
+	.cpHello_logos li,
+	.cpHello_logos li:nth-child(3n),
+	.cpHello_logos li:nth-child(5n) { width: 3.1rem; padding: 0.5rem; }
+	.cpHello_logos li:nth-child(4n) { width: 3.6rem; }
 }
 
 /* ==========================================================================
@@ -1162,7 +1163,7 @@ html.cp-present .siteFooter { display: none; }
 
 .cpGal_laptop {
 	display: block;
-	width: min(100%, calc((100vh - 15rem) * 1.75));
+	width: min(100%, calc((100vh - 19rem) * 1.55));
 	justify-self: center;
 	perspective: 1600px;
 }
@@ -1195,7 +1196,50 @@ html.cp-present .siteFooter { display: none; }
 	object-fit: cover;
 }
 
+.cpGal_display { position: relative; }
+
 .cpGal_drift { animation: cpDrift 16s ease-in-out infinite alternate; }
+
+/* A YouTube film playing muted over its still; the play badge invites sound. */
+.cpGal_yt {
+	position: absolute;
+	inset: -1px;
+	width: calc(100% + 2px);
+	height: calc(100% + 2px);
+	border: 0;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.8s ease;
+}
+
+.cpGal_yt.is-ready { opacity: 1; }
+
+.cpGal_play {
+	position: absolute;
+	right: 4%;
+	bottom: 6%;
+	z-index: 2;
+	display: grid;
+	place-items: center;
+	width: clamp(2.4rem, 4vw, 3.2rem);
+	aspect-ratio: 1;
+	border-radius: 50%;
+	background: rgba(10, 10, 10, 0.6);
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	color: #fff;
+	font-size: 0.85rem;
+	transition: transform 0.3s, background 0.3s;
+}
+
+.cpGal_laptop:hover .cpGal_play { transform: scale(1.1); background: var(--lime); color: var(--ink); }
+
+.pvViewer_yt {
+	width: min(88vw, calc((100vh - 9rem) * 16 / 9));
+	aspect-ratio: 16 / 9;
+	border: 0;
+	border-radius: 10px;
+	box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.9);
+}
 
 .cpGal_base {
 	display: block;
@@ -1243,7 +1287,9 @@ html.cp-present .siteFooter { display: none; }
 	.cpGal_phoneRow { overflow-x: auto; justify-content: flex-start; width: 100%; padding-bottom: 1rem; scroll-snap-type: x mandatory; }
 	.cpGal_phone { --ph: 27rem; flex: none; scroll-snap-align: center; }
 	.cpGal_phone:nth-child(even) { margin-top: 0; }
-	.cpGal_laptopWrap { grid-template-columns: 1fr; }
+	.cpGal_laptopWrap { grid-template-columns: 1fr; gap: 1.6rem; }
+	.cpGal_laptop { width: 100%; }
+	.cpGal_base { width: 106%; margin-left: -3%; }
 	.cpGal_text { transform: none; }
 }
 
@@ -1418,3 +1464,159 @@ html.cp-present .siteFooter { display: none; }
 .cpDeck--present .cpStory_metric { margin-top: min(1.5rem, 2vh); padding-top: min(1.1rem, 1.5vh); }
 .cpDeck--present .cpStory_metric .resultNum { font-size: min(clamp(2.2rem, 4vw, 3.6rem), 5.4vh); }
 
+
+
+/* ==========================================================================
+   Category filter: only the chosen chapter's slides show.
+   ========================================================================== */
+
+.cpDeck[data-filter="digital"] > :not([data-cat="digital"]),
+.cpDeck[data-filter="retainers"] > :not([data-cat="retainers"]),
+.cpDeck[data-filter="branding"] > :not([data-cat="branding"]),
+.cpDeck[data-filter="tvc"] > :not([data-cat="tvc"]),
+.cpDeck[data-filter="photography"] > :not([data-cat="photography"]) {
+	display: none !important;
+}
+
+/* ---------- the category navbar: floating glass, a sliding highlight ---------- */
+
+/* The deck has its own navigation; the site's back-to-top button would sit
+ * over the navbar and swallow its clicks. */
+body:has(.cpDeck) .BackToTop_Wrap { display: none !important; }
+
+.cpNav {
+	position: fixed;
+	left: 50%;
+	bottom: 0.9rem;
+	z-index: 210;
+	max-width: calc(100vw - 2rem);
+	transform: translateX(-50%);
+	padding: 0.32rem;
+	border-radius: 999px;
+	background: rgba(14, 14, 14, 0.62);
+	backdrop-filter: blur(16px) saturate(1.3);
+	-webkit-backdrop-filter: blur(16px) saturate(1.3);
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	box-shadow:
+		0 20px 50px -20px rgba(0, 0, 0, 0.6),
+		inset 0 1px 0 rgba(255, 255, 255, 0.16),
+		inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 55%);
+	touch-action: pan-x;
+	user-select: none;
+	animation: cpNavIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+}
+
+@keyframes cpNavIn {
+	from { opacity: 0; transform: translate(-50%, 140%); }
+}
+
+.cpNav_track {
+	position: relative;
+	display: flex;
+	gap: 0.1rem;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.cpNav_track::-webkit-scrollbar { display: none; }
+
+.cpNav button {
+	position: relative;
+	z-index: 1;
+	flex: none;
+	padding: 0.62rem 1.05rem;
+	border: 0;
+	border-radius: 999px;
+	background: none;
+	color: rgba(255, 255, 255, 0.68);
+	font-family: var(--font-display);
+	font-size: 0.72rem;
+	font-weight: 500;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	cursor: pointer;
+	transition: color 0.35s ease;
+}
+
+.cpNav button:hover { color: #fff; }
+.cpNav button.is-on { color: var(--ink, #0a0a0a); }
+
+/* The liquid highlight: moved and stretched by a spring (CSS only colours it). */
+.cpNav_pill {
+	position: absolute;
+	z-index: 0;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 6px 18px -8px rgba(0, 0, 0, 0.45);
+	transform-origin: 50% 50%;
+	will-change: transform, width;
+	transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+}
+
+/* Dragged, it turns into a clear lens that magnifies the glass beneath. */
+.cpNav_pill.is-lens {
+	background: rgba(255, 255, 255, 0.14);
+	backdrop-filter: blur(1.5px) saturate(2) brightness(1.25) contrast(1.1);
+	-webkit-backdrop-filter: blur(1.5px) saturate(2) brightness(1.25) contrast(1.1);
+	box-shadow:
+		inset 0 1px 1px rgba(255, 255, 255, 0.85),
+		inset 0 -1px 1px rgba(255, 255, 255, 0.25),
+		inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+		0 10px 30px -8px rgba(0, 0, 0, 0.55);
+}
+
+.cpNav_pill.is-lens ~ button.is-on { color: #fff; }
+
+.cpNav button.is-on { cursor: grab; }
+.cpNav_track:active button.is-on { cursor: grabbing; }
+
+.cpNav_pill.is-chosen { background: var(--lime); }
+
+/* The strip keeps the slide name and counter clear of the navbar. */
+.cpHud_label { max-width: calc(50vw - 24rem); }
+
+@media (max-width: 1180px) {
+	.cpNav button { padding: 0.55rem 0.75rem; letter-spacing: 0.06em; }
+	.cpHud_label { display: none; }
+}
+
+@media (max-width: 1500px) {
+	.cpHud_brand { display: none; }
+}
+
+/* Phones: the navbar spans the width and swipes; the strip keeps only its line. */
+@media (max-width: 900px) {
+	.cpNav {
+		left: 0.6rem;
+		right: 0.6rem;
+		bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
+		max-width: none;
+		transform: none;
+		padding: 0.26rem;
+	}
+	/* The ends fade, hinting there is more to swipe to. */
+	.cpNav_track {
+		/* Inset so the fade never hides the first or last item. */
+		padding: 0 1rem;
+		scroll-padding: 0 1rem;
+		-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 0.8rem, #000 calc(100% - 0.8rem), transparent 100%);
+		mask-image: linear-gradient(90deg, transparent 0, #000 0.8rem, #000 calc(100% - 0.8rem), transparent 100%);
+	}
+	/* Every slide ends above the navbar. */
+	.cpDeck > section:not(.cpDeckReel) { padding-bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px)) !important; }
+	@keyframes cpNavIn { from { opacity: 0; transform: translateY(140%); } }
+	.cpNav button { font-size: 0.64rem; padding: 0.55rem 0.8rem; letter-spacing: 0.08em; }
+	.cpHud_count,
+	.cpHud_btns,
+	.cpHud_label { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cpNav { animation: none; }
+	.cpNav_pill { will-change: auto; }
+}

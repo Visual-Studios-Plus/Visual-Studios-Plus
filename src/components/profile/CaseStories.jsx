@@ -41,7 +41,7 @@ function Mark( { client, title } ) {
 }
 
 /* One hero slide. Branding projects use the deck's white slide and yellow swoosh. */
-export function Story( { s, n, total, flip, label } ) {
+export function Story( { s, n, total, flip, label, cat } ) {
 	const stage = useRef( null );
 	const [ lead, ...floats ] = s.imgs;
 	const brand = s.type === 'Branding Project';
@@ -62,7 +62,7 @@ export function Story( { s, n, total, flip, label } ) {
 
 	return (
 		<section className={ `cpSlide cpStory${ flip ? ' cpStory--flip' : '' }${ brand ? ' cpStory--brand' : '' }` } id={ storyId( s ) }
-			data-slide={ label } style={ { '--accent': s.accent, '--bg': s.bg, '--ink': s.ink, '--word': s.wordColor } }
+			data-slide={ label } data-cat={ cat } style={ { '--accent': s.accent, '--bg': s.bg, '--ink': s.ink, '--word': s.wordColor } }
 			aria-labelledby={ `${ storyId( s ) }-t` }>
 			{ brand ? (
 				<svg className="cpStory_swoosh" viewBox="0 0 400 400" aria-hidden="true">

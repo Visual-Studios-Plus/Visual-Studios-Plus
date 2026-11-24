@@ -7,7 +7,8 @@
  *            frames), 'laptop' (a laptop that opens, playing the film)
  *   media  — { src, w, h, full?, video? }, in reading order
  *   text   — the page's copy, set beside a laptop / under phones
- *   video  — the film a laptop plays
+ *   video  — the film a laptop plays (a file)
+ *   yt     — or its YouTube id (played muted in the laptop, with sound in the viewer)
  *
  * Generated from the PDF; keyed by its page number.
  */
@@ -663,6 +664,7 @@ export default {
 	},
 	"51": {
 		"layout": "laptop",
+		"yt": "C3rmLXmZj6E",
 		"media": [
 			{
 				"src": "/assets/profile/g/p51-0.webp",
@@ -674,6 +676,7 @@ export default {
 	},
 	"53": {
 		"layout": "laptop",
+		"yt": "Qs635MKo0bk",
 		"media": [
 			{
 				"src": "/assets/profile/g/p53-1.webp",
@@ -685,6 +688,7 @@ export default {
 	},
 	"55": {
 		"layout": "laptop",
+		"yt": "kzRCcXzPxlk",
 		"media": [
 			{
 				"src": "/assets/profile/g/p55-0.webp",

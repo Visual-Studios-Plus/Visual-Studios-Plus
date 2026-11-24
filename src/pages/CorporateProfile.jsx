@@ -44,25 +44,25 @@ const dollyMarks = ( items ) => items.map( ( s ) => media[ s.title ]?.mark || me
 /* The deck's five chapters, with their dividers and reels. */
 const CHAPTERS = [
 	{
-		id: 'digital', no: 1, kind: 'Digital Case Study', label: 'Digital Case Studies',
+		id: 'digital', short: 'Case Studies', no: 1, kind: 'Digital Case Study', label: 'Digital Case Studies',
 		figure: 'Tiesh-7224-1-2.webp', reel: '/assets/smm/medium-concept-02.mp4', kicker: 'Real-time content that stops the scroll.'
 	},
 	{
-		id: 'retainers', no: 2, kind: 'Digital Retainer', label: 'Digital Retainers',
+		id: 'retainers', short: 'Retainers', no: 2, kind: 'Digital Retainer', label: 'Digital Retainers',
 		figure: 'KeelesFoodPhotography0314.webp', reel: '/assets/smm/waga-web-03.mp4', kicker: 'Always on. Month after month.'
 	},
 	{
-		id: 'branding', no: 3, kind: 'Branding Project', label: 'Branding Projects',
+		id: 'branding', short: 'Branding', no: 3, kind: 'Branding Project', label: 'Branding Projects',
 		figure: 'DSC_1643-2.webp', reel: '/assets/projects/dankotuwa.mp4', kicker: 'Identities you can hold.',
 		// Wall design (Online Kade) sits after Viva La Vida in the deck.
 		extra: { after: 'Viva La Vida', page: 42, caption: 'Wall Design — Online Kade' }
 	},
 	{
-		id: 'tvc', no: 4, kind: 'TVC Campaign', label: 'TVC Campaigns',
+		id: 'tvc', short: 'TVC', no: 4, kind: 'TVC Campaign', label: 'TVC Campaigns',
 		figure: 'D85_3829-HDR.webp', reel: '/assets/smm/waga-web-02.mp4', kicker: 'Real craft. Real results.'
 	},
 	{
-		id: 'photography', no: 5, kind: 'Commercial Photography', label: 'Photography Projects',
+		id: 'photography', short: 'Photography', no: 5, kind: 'Commercial Photography', label: 'Photography Projects',
 		figure: 'DJI_0078-HDR.webp', reel: '/assets/projects/heritance.mp4', kicker: 'Frames that sell the experience.',
 		// The portfolio spreads come before Sapphire Dragon.
 		lead: [ [ 57, 'Hospitality, interior & architecture' ], [ 58, 'High jewellery' ], [ 59, 'Raspberry — jewellery campaign' ], [ 60, 'Food photography' ] ]
@@ -89,11 +89,21 @@ export default function CorporateProfile() {
 	const none = useRef( null );
 	useReveals( present ? none : root );
 	useStoryMotion( root, present );
-	const deck = useDeck( root, present );
+	// Category filter: 'all', or a chapter id — only that chapter's slides show.
+	const [ filter, setFilter ] = useState( 'all' );
+	const deck = useDeck( root, present, filter );
+	const cats = CHAPTERS.map( ( ch ) => [ ch.id, ch.short ] );
+	const choose = ( id ) => {
+		setFilter( id );
+		if ( ! present ) {
+			const top = root.current.getBoundingClientRect().top + window.scrollY;
+			window.scrollTo( 0, Math.max( 0, top ) );
+		}
+	};
 
 	return (
 		<>
-			<div ref={ root } className="corporateProfile cpDeck">
+			<div ref={ root } className="corporateProfile cpDeck" data-filter={ filter }>
 				<ProfileCover />
 
 				<DeckHello />
@@ -102,26 +112,26 @@ export default function CorporateProfile() {
 					const items = ALL.filter( ( s ) => s.type === ch.kind );
 					return (
 						<Fragment key={ ch.id }>
-							<section className="cpSlide cpDeckReel" id={ ch.id } data-slide={ ch.label }>
-								<ChapterReel video={ ch.reel } still={ F( ch.figure ) } no={ ch.no } label={ ch.label } kicker={ ch.kicker }
+							<section className="cpSlide cpDeckReel" id={ ch.id } data-slide={ ch.label } data-cat={ ch.id }>
+								<ChapterReel video={ ch.reel } still={ F( ch.figure ) } label={ ch.label } kicker={ ch.kicker }
 									count={ items.length } accent={ items[ 0 ].accent } cards={ dollyCards( items ) } marks={ dollyMarks( items ) } present={ present } />
 							</section>
 
 							{ ch.lead && ch.lead.map( ( [ page, caption ] ) => (
-								<DeckGallery key={ page } page={ page } bg={ PHOTO_BG } ink="#141414" caption={ caption } label={ caption } />
+								<DeckGallery key={ page } page={ page } bg={ PHOTO_BG } ink="#141414" caption={ caption } label={ caption } cat={ ch.id } />
 							) ) }
 
 							{ items.map( ( s ) => {
 								const n = ALL.indexOf( s ) + 1;
 								return (
 									<Fragment key={ s.title }>
-										<Story s={ s } n={ n } total={ ALL.length } flip={ n % 2 === 0 } label={ s.word } />
+										<Story s={ s } n={ n } total={ ALL.length } flip={ n % 2 === 0 } label={ s.word } cat={ ch.id } />
 										{ s.spreads.map( ( page, k ) => (
-											<DeckGallery key={ page } page={ page } bg={ s.bg } ink={ s.ink } label={ `${ s.word } — gallery` }
+											<DeckGallery key={ page } page={ page } bg={ s.bg } ink={ s.ink } label={ `${ s.word } — gallery` } cat={ ch.id }
 												caption={ `${ s.title }${ s.spreads.length > 1 ? ` · ${ k + 1 }/${ s.spreads.length }` : '' }` } />
 										) ) }
 										{ ch.extra && s.title.startsWith( ch.extra.after ) && (
-											<DeckGallery page={ ch.extra.page } bg="#f6f5f1" ink="#141414" caption={ ch.extra.caption } label={ ch.extra.caption } />
+											<DeckGallery page={ ch.extra.page } bg="#f6f5f1" ink="#141414" caption={ ch.extra.caption } label={ ch.extra.caption } cat={ ch.id } />
 										) }
 									</Fragment>
 								);
@@ -132,7 +142,7 @@ export default function CorporateProfile() {
 
 				<DeckClosing />
 			</div>
-			<DeckHud root={ root } deck={ deck } />
+			<DeckHud root={ root } deck={ deck } cats={ cats } filter={ filter } onFilter={ choose } />
 		</>
 	);
 }

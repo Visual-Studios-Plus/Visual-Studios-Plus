@@ -44,8 +44,8 @@ function countUp( slide ) {
 	} );
 }
 
-export default function useDeck( root, enabled ) {
-	const [ state, setState ] = useState( { i: 0, n: 0, label: '' } );
+export default function useDeck( root, enabled, filter = 'all' ) {
+	const [ state, setState ] = useState( { i: 0, n: 0, label: '', cat: '' } );
 	const api = useRef( { go: () => {} } );
 
 	useLayoutEffect( () => {
@@ -53,7 +53,9 @@ export default function useDeck( root, enabled ) {
 		if ( ! enabled || ! el ) {
 			return undefined;
 		}
-		const slides = [ ...el.querySelectorAll( ':scope > section, :scope > header' ) ];
+		// A category filter narrows the deck to that chapter's slides.
+		const slides = [ ...el.querySelectorAll( ':scope > section, :scope > header' ) ]
+			.filter( ( s ) => filter === 'all' || s.dataset.cat === filter );
 		const n = slides.length;
 		const label = ( k ) => slides[ k ]?.dataset.slide || 'Cover';
 		let i = 0;
@@ -79,7 +81,7 @@ export default function useDeck( root, enabled ) {
 		};
 
 		mark( 0 );
-		setState( { i: 0, n, label: label( 0 ) } );
+		setState( { i: 0, n, label: label( 0 ), cat: slides[ 0 ]?.dataset.cat || '' } );
 		requestAnimationFrame( () => arrive( 0 ) );
 
 		const go = ( to ) => {
@@ -117,7 +119,7 @@ export default function useDeck( root, enabled ) {
 			}
 			tl.call( () => arrive( k ), null, DUR * 0.45 );
 			i = k;
-			setState( { i: k, n, label: label( k ) } );
+			setState( { i: k, n, label: label( k ), cat: slides[ k ]?.dataset.cat || '' } );
 		};
 		api.current.go = go;
 		api.current.step = ( d ) => go( i + d );
@@ -246,7 +248,7 @@ export default function useDeck( root, enabled ) {
 			html.classList.remove( 'cp-present' );
 			startScroll();
 		};
-	}, [ enabled ] ); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [ enabled, filter ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const go = useCallback( ( k ) => api.current.go( k ), [] );
 	const step = useCallback( ( d ) => api.current.step?.( d ), [] );
