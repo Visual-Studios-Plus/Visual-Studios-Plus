@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import GALLERIES from '../../data/profileGalleries.js';
 import { pad, reduced, ytEmbed } from '../../lib/motion.js';
 import { useInView } from './DeckSlides.jsx';
+import { Ring, Loupe, Feature, Brut } from './PhotoShowcase.jsx';
 
 /*
  * Gallery slides: each of the deck's gallery pages as a live gallery built
@@ -14,6 +15,8 @@ import { useInView } from './DeckSlides.jsx';
  *            floating; a frame can play the campaign's video
  *   laptop — a laptop whose lid opens as the slide arrives, playing the film
  *            (or the film's still, drifting), with the page's copy beside it
+ *   ring / loupe / feature / brut — the interactive photography layouts
+ *            (see PhotoShowcase.jsx)
  *
  * Any picture opens the viewer: full screen, arrows / keys / Esc to browse.
  */
@@ -259,10 +262,19 @@ function Laptop( { media, open, text, video, yt, slide } ) {
 	);
 }
 
+/* What each photography layout invites you to do. */
+const HINT = {
+	ring: ( n ) => `${ n } photographs · Drag to turn`,
+	loupe: ( n ) => `${ n } pieces · Hover to inspect`,
+	feature: () => 'Campaign · Click to view',
+	brut: ( n ) => `${ n } plates · Click to view`
+};
+
 export default function DeckGallery( { page, bg, ink, caption, label, cat } ) {
 	const g = GALLERIES[ page ];
 	const ref = useInView( 0.25 );
 	const [ at, setAt ] = useState( -1 );
+	const active = useSlideActive( ref );
 	if ( ! g ) {
 		return null;
 	}
@@ -277,13 +289,17 @@ export default function DeckGallery( { page, bg, ink, caption, label, cat } ) {
 			<header className="cpGal_head">
 				<p className="cpGal_title">{ caption }</p>
 				<p className="cpGal_count">
-					{ g.layout === 'laptop' ? 'Film' : g.layout === 'phones' ? `${ count } reels` : count > 1 ? `${ count } photographs` : 'Feature' }
-					<span> · Click to view</span>
+					{ HINT[ g.layout ] ? HINT[ g.layout ]( count ) : g.layout === 'laptop' ? 'Film' : g.layout === 'phones' ? `${ count } reels` : count > 1 ? `${ count } photographs` : 'Feature' }
+					{ ! HINT[ g.layout ] && <span> · Click to view</span> }
 				</p>
 			</header>
 			{ g.layout === 'grid' && <Grid media={ g.media } open={ open } slide={ ref } /> }
 			{ g.layout === 'phones' && <Phones media={ g.media } open={ open } text={ g.text } slide={ ref } /> }
 			{ g.layout === 'laptop' && <Laptop media={ g.media } open={ open } text={ g.text } video={ g.video } yt={ g.yt } slide={ ref } /> }
+			{ g.layout === 'ring' && <Ring media={ g.media } open={ open } active={ active } /> }
+			{ g.layout === 'loupe' && <Loupe media={ g.media } open={ open } /> }
+			{ g.layout === 'feature' && <Feature media={ g.media } open={ open } /> }
+			{ g.layout === 'brut' && <Brut media={ g.media } open={ open } /> }
 			{ at >= 0 && <Viewer items={ items } index={ at } onIndex={ setAt } onClose={ () => setAt( -1 ) } title={ caption } /> }
 		</section>
 	);

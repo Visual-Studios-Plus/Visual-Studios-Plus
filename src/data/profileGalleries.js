@@ -3,8 +3,9 @@
  * rebuilt as a live slide from its own pictures (extracted from the PDF into
  * /assets/profile/g, or the full photo archive for the photography pages).
  *
- *   layout — 'grid' (a mosaic that assembles), 'phones' (reels in phone
- *            frames), 'laptop' (a laptop that opens, playing the film)
+ *   layout — 'grid' (a slideshow), 'phones' (reels in phone frames),
+ *            'laptop' (a laptop that opens, playing the film), or for the
+ *            photography pages 'ring', 'loupe', 'feature', 'brut'
  *   media  — { src, w, h, full?, video? }, in reading order
  *   text   — the page's copy, set beside a laptop / under phones
  *   video  — the film a laptop plays (a file)
@@ -699,7 +700,7 @@ export default {
 		"text": "From conceptualisation to post-production, we handled the full creative and executional scope of DSI’s Women’s Day video — fast turnarounds, shifting creative and detailed planning, brought to life as a story of the strength and everyday journeys of Sri Lankan women."
 	},
 	"59": {
-		"layout": "grid",
+		"layout": "feature",
 		"media": [
 			{
 				"src": "/assets/profile/g/p59-0.webp",
@@ -759,7 +760,7 @@ export default {
 		]
 	},
 	"57": {
-		"layout": "grid",
+		"layout": "ring",
 		"media": [
 			{
 				"src": "/assets/photos/thumb/D85_3829-HDR.webp",
@@ -836,7 +837,7 @@ export default {
 		]
 	},
 	"58": {
-		"layout": "grid",
+		"layout": "loupe",
 		"media": [
 			{
 				"src": "/assets/photos/thumb/DSC1313.webp",
@@ -901,7 +902,7 @@ export default {
 		]
 	},
 	"60": {
-		"layout": "grid",
+		"layout": "brut",
 		"media": [
 			{
 				"src": "/assets/photos/thumb/KeelesFoodPhotography0403.webp",
