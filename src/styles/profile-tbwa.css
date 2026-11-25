@@ -546,3 +546,8 @@
 	.cpCover_cut, .cpCover--photo .cpCover_cut, .cpCover[data-slide^="Pond"] .cpCover_cut { max-height: 38svh; }
 	.cpCover--photo .cpCover_cut { width: auto; height: 36svh; }
 }
+
+/* The Amex card is a wide, flat object: smaller, centred between the words. */
+@media (min-width: 901px) {
+	.cpCover[data-slide^="American"] .cpCover_cut { height: auto; width: 34vw; max-width: 34vw; top: 50%; bottom: auto; translate: -50% -50%; }
+}
