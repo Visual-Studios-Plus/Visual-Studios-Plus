@@ -7,7 +7,7 @@ import ProfileCover from '../components/profile/ProfileCover.jsx';
 import ChapterReel from '../components/profile/ChapterReel.jsx';
 import { Story, useStoryMotion, storyImg, isCut } from '../components/profile/CaseStories.jsx';
 import { DeckHello, DeckClosing, DeckHud } from '../components/profile/DeckSlides.jsx';
-import BrandCover from '../components/profile/BrandCover.jsx';
+import BrandCover, { coverFor } from '../components/profile/BrandCover.jsx';
 import DeckGallery from '../components/profile/DeckGallery.jsx';
 import useDeck, { presentMode } from '../components/profile/useDeck.js';
 import STORIES from '../data/profileStories.js';
@@ -126,7 +126,7 @@ export default function CorporateProfile() {
 								const n = ALL.indexOf( s ) + 1;
 								return (
 									<Fragment key={ s.title }>
-										{ s.cover && <BrandCover s={ s } cat={ ch.id } /> }
+										{ coverFor( s ) && <BrandCover s={ s } cat={ ch.id } /> }
 										<Story s={ s } n={ n } total={ ALL.length } flip={ n % 2 === 0 } label={ s.word } cat={ ch.id } />
 										{ s.spreads.map( ( page, k ) => (
 											<DeckGallery key={ page } page={ page } bg={ s.bg } ink={ s.ink } label={ `${ s.word } — gallery` } cat={ ch.id }

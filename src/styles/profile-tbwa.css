@@ -373,8 +373,9 @@
 @media (max-width: 900px) {
 	.cpDeck .cpStory_mosaic { order: -1; height: 72vw; max-height: 26rem; }
 }
-
-/* ---------- Brand cover: name and category in giant serif, product between ---------- */
+/* ---------- Brand cover: two giant serif words, the product between ----------
+ * Type sizes itself to the word length (--n1 / --n2) so long names still fit:
+ * the top word spans ~70% of the width, the bottom one runs edge to edge. */
 
 .cpCover {
 	position: relative;
@@ -382,99 +383,96 @@
 	min-height: 100vh;
 	min-height: 100svh;
 	background: var(--cv-bg, #00c4f0) !important;
-	color: #fff;
+	color: var(--cv-ink, #fff);
 }
 
 .cpCover_word {
 	position: absolute;
+	z-index: 1;
 	left: 2vw;
 	right: 2vw;
 	margin: 0;
-	font-family: 'Playfair Display', var(--tb-serif, Georgia), serif;
+	font-family: var(--pf-serif, 'Instrument Serif'), Georgia, serif;
 	font-weight: 800;
-	font-size: min(27vw, 42vh);
 	line-height: 0.8;
 	letter-spacing: -0.02em;
 	text-transform: uppercase;
 	white-space: nowrap;
-	color: #f7f7f5;
+	color: var(--cv-ink, #f7f7f5);
 	pointer-events: none;
 }
 
-.cpCover_word--top { top: 4vh; z-index: 1; }
-.cpCover_word--bottom { bottom: 6vh; z-index: 1; font-size: min(22vw, 42vh); }
+.cpCover_word--top { top: 11vh; font-size: min(calc(60vw / (var(--n1) * 0.74)), 30vh); }
+.cpCover_word--bottom { bottom: 3vh; font-size: min(calc(95vw / (var(--n2) * 0.74)), 34vh); }
 
-/* The product stands over the top word and under nothing: it sits in front. */
+/* The cut-out stands in front of both words, breaking the bottom edge. */
 .cpCover_cut {
 	position: absolute;
 	z-index: 2;
-	left: 24%;
-	bottom: -6vh;
-	height: 96vh;
+	left: 38%;
+	bottom: -8vh;
+	height: 104vh;
 	width: auto;
-	max-width: 48vw;
+	max-width: 50vw;
+	translate: -50% 0;
 	object-fit: contain;
-	filter: drop-shadow(0 30px 40px rgba(0, 40, 70, 0.25));
+	filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.22));
 }
 
-/* The bottom word passes in front of the jars' base, as on the print. */
-.cpCover_word--bottom { z-index: 3; }
+/* A campaign photo instead: a framed print between the words. */
+.cpCover--photo .cpCover_cut {
+	top: 50%;
+	bottom: auto;
+	height: 60vh;
+	max-width: 40vw;
+	translate: -50% -46%;
+	object-fit: cover;
+	filter: none;
+	box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55);
+}
 
 .cpCover_side {
 	position: absolute;
 	z-index: 4;
 	right: 5vw;
-	top: 14vh;
+	top: 19vh;
 	display: grid;
 	justify-items: end;
-	gap: 3.4vh;
-	width: min(31vw, 30rem);
+	gap: 12vh;
+	width: min(27vw, 27rem);
 }
 
 .cpCover_logo {
-	width: min(15vw, 15rem);
+	max-width: min(15vw, 15rem);
+	max-height: 11vh;
+	width: auto;
 	height: auto;
+	object-fit: contain;
+}
+
+.cpCover_name {
+	margin: 0;
+	font-family: var(--tb-serif, Georgia), serif;
+	font-size: min(2.4rem, 5vh);
+	line-height: 1;
+	text-align: right;
 }
 
 .cpCover_text {
 	margin: 0;
 	font-family: var(--font-display);
-	font-size: min(1.15rem, 2.2vh);
+	font-size: min(1.1rem, 2.1vh);
 	font-weight: 400;
 	line-height: 1.55;
 	letter-spacing: 0.03em;
 	text-align: justify;
-	color: #fff;
+	color: var(--cv-ink, #fff);
 }
 
-@media (max-width: 900px) {
-	.cpCover { min-height: 0; aspect-ratio: auto; height: 100svh; }
-	.cpCover_word { font-size: 26vw; }
-	.cpCover_word--top { top: 9vh; }
-	.cpCover_word--bottom { bottom: 22vh; font-size: 23vw; }
-	.cpCover_cut { left: 14%; bottom: 18vh; height: 56vh; max-width: 74vw; }
-	.cpCover_side { left: var(--gutter); right: var(--gutter); top: auto; bottom: 7rem; width: auto; justify-items: start; gap: 1rem; }
-	.cpCover_logo { width: 9rem; }
-	.cpCover_text { font-size: 0.85rem; text-align: left; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-}
+/* Pond's: the jars are tall and narrow, so they can stand bigger. */
+.cpCover[data-slide^="Pond"] .cpCover_cut { left: 34%; height: 122vh; bottom: -16vh; max-width: 62vw; }
 
-/* Sized to fit: the name across ~70% of the width, the category edge to edge. */
-.cpCover_word--top { top: 3vh; font-size: min(15.5vw, 34vh); }
-.cpCover_word--bottom { z-index: 1; bottom: 3vh; font-size: min(16.2vw, 34vh); }
-.cpCover_cut { left: 26%; bottom: -4vh; height: 88vh; }
-.cpCover_side { top: 15vh; gap: 12vh; width: min(30vw, 29rem); }
-
-@media (max-width: 900px) {
-	.cpCover_word--top { top: 10vh; font-size: 17vw; }
-	.cpCover_word--bottom { bottom: 24vh; font-size: 16.5vw; }
-	.cpCover_side { gap: 1rem; }
-}
-@media (min-width: 901px) {
-	.cpCover_word--top { top: 11vh; font-size: min(14.5vw, 30vh); }
-	.cpCover_side { top: 19vh; }
-}
-
-/* Phones: the cover as a simple stack (name, product, category, logo, copy). */
+/* Phones: a simple stack (name, picture, category, logo). */
 @media (max-width: 900px) {
 	.cpCover {
 		display: flex !important;
@@ -484,55 +482,67 @@
 		min-height: 100svh !important;
 		padding: 6.5rem var(--gutter) 7.5rem !important;
 	}
-	.cpCover_word,
-	.cpCover_word--top,
-	.cpCover_word--bottom {
-		position: relative !important;
-		inset: auto !important;
-		top: auto !important;
-		bottom: auto !important;
-		left: auto !important;
-		right: auto !important;
-		font-size: 21vw !important;
+	.cpCover_word {
+		position: relative;
+		inset: auto;
 		text-align: center;
 	}
-	.cpCover_word--bottom { order: 3; margin-top: -9vw; font-size: 17vw !important; }
-	.cpCover_word--top { order: 1; }
-	.cpCover_cut {
+	.cpCover_word--top { order: 1; font-size: min(calc(90vw / (var(--n1) * 0.74)), 24vw); }
+	.cpCover_word--bottom { order: 3; margin-top: -6vw; font-size: min(calc(90vw / (var(--n2) * 0.74)), 20vw); }
+	.cpCover_cut,
+	.cpCover--photo .cpCover_cut,
+	.cpCover[data-slide^="Pond"] .cpCover_cut {
 		order: 2;
-		position: relative !important;
-		left: auto !important;
-		bottom: auto !important;
+		position: relative;
+		inset: auto;
+		translate: none;
 		align-self: center;
-		height: auto !important;
-		width: 78vw !important;
-		max-width: 22rem !important;
-		margin-top: -10vw;
+		width: 86vw;
+		max-width: 26rem;
+		height: auto;
+		max-height: 46svh;
+		margin: -8vw 0 -4vw;
 	}
+	.cpCover--photo .cpCover_cut { width: 74vw; aspect-ratio: 4 / 5; margin: -4vw 0 0; }
 	.cpCover_side {
 		order: 4;
-		position: relative !important;
-		inset: auto !important;
-		width: auto !important;
-		margin-top: 1.6rem;
-		justify-items: start;
+		position: relative;
+		inset: auto;
+		width: auto;
+		margin-top: 1.4rem;
+		justify-items: center;
 	}
-	.cpCover_text { -webkit-line-clamp: unset; display: block; }
+	.cpCover_logo { max-width: 9rem; max-height: 3.5rem; }
+	.cpCover_name { text-align: center; font-size: 1.6rem; }
+	.cpCover_text { display: none; }
+}
+
+/* The covers share the home hero's title face: Instrument Serif, lowercase,
+ * set tight. It runs narrower than caps, so the width factor drops to 0.5. */
+.cpCover_word {
+	font-family: var(--pf-serif, 'Instrument Serif'), Georgia, serif;
+	font-weight: 400;
+	line-height: 0.78;
+	letter-spacing: -0.045em;
+	text-transform: lowercase;
+}
+
+.cpCover_word--top { top: 9vh; font-size: min(calc(60vw / (var(--n1) * 0.5)), 36vh); }
+.cpCover_word--bottom { bottom: 2vh; font-size: min(calc(94vw / (var(--n2) * 0.5)), 40vh); }
+
+@media (max-width: 900px) {
+	.cpCover_word--top { font-size: min(calc(90vw / (var(--n1) * 0.5)), 30vw); }
+	.cpCover_word--bottom { font-size: min(calc(90vw / (var(--n2) * 0.5)), 26vw); }
+}
+.cpCover_word--top { top: 6vh; font-size: min(calc(60vw / (var(--n1) * 0.4)), 46vh); }
+.cpCover_word--bottom { bottom: 1vh; font-size: min(calc(94vw / (var(--n2) * 0.4)), 58vh); }
+@media (max-width: 900px) {
+	.cpCover_word--top { font-size: min(calc(90vw / (var(--n1) * 0.4)), 36vw); }
+	.cpCover_word--bottom { font-size: min(calc(90vw / (var(--n2) * 0.4)), 32vw); }
 }
 
 @media (max-width: 900px) {
-	.cpCover_text { display: none !important; }
-	.cpCover_side { justify-items: center; }
-}
-
-/* Bigger product: the jars fill the height and break the bottom edge. */
-@media (min-width: 901px) {
-	.cpCover_cut { left: 20%; bottom: -16vh; height: 122vh; max-width: 62vw; }
-}
-@media (max-width: 900px) {
-	.cpCover_cut { width: 96vw !important; max-width: 28rem !important; margin-top: -14vw; margin-bottom: -6vw; }
-}
-@media (min-width: 901px) {
-	.cpCover_cut { left: 13%; }
-	.cpCover_side { width: min(27vw, 27rem); }
+	.cpCover { justify-content: center; padding-top: 4.5rem !important; padding-bottom: 6.5rem !important; }
+	.cpCover_cut, .cpCover--photo .cpCover_cut, .cpCover[data-slide^="Pond"] .cpCover_cut { max-height: 38svh; }
+	.cpCover--photo .cpCover_cut { width: auto; height: 36svh; }
 }
