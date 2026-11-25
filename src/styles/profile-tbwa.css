@@ -773,3 +773,8 @@
 @media (prefers-reduced-motion: reduce) {
 	.cpGal_tile { opacity: 1; transform: none; transition: none; }
 }
+
+.cpGal_tile.is-tall { grid-row: span 2; }
+@media (max-width: 900px) {
+	.cpGal_tile.is-wide { grid-column: span 2; }
+}

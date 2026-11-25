@@ -159,11 +159,21 @@ function Grid( { media, open } ) {
 		);
 	}
 
-	// A bento wall: every photograph at once, in tiles of mixed size.
+	// A bento wall: every photograph at once, each tile shaped by its picture
+	// so little is cropped. Landscape goes wide, portrait goes tall, and the
+	// largest file (the hero shot) takes the big 2 x 2 tile.
+	const biggest = media.reduce( ( b, m, i ) => ( m.w * m.h > media[ b ].w * media[ b ].h ? i : b ), 0 );
+	const shape = ( m, i ) => {
+		const ar = m.w / m.h;
+		if ( i === biggest ) {
+			return ' is-big';
+		}
+		return ar >= 1.5 ? ' is-wide' : ar <= 0.8 ? ' is-tall' : '';
+	};
 	return (
 		<ul className="cpGal_bento" style={ { '--n': n } }>
 			{ media.map( ( m, i ) => (
-				<li key={ m.src } className={ `cpGal_tile${ i % 6 === 0 ? ' is-big' : i % 6 === 4 ? ' is-wide' : '' }` } style={ { '--i': i } }>
+				<li key={ m.src } className={ `cpGal_tile${ shape( m, i ) }` } style={ { '--i': i } }>
 					<button type="button" onClick={ () => open( i ) } aria-label={ `View photograph ${ i + 1 } full size` }>
 						<img src={ m.src } alt="" loading="lazy" decoding="async" />
 					</button>
