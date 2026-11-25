@@ -119,8 +119,8 @@ export default {
 			},
 			{
 				"src": "/assets/profile/g/p10-4.webp",
-				"url": "https://www.instagram.com/ponds.sl/",
-				"linkLabel": "Pond’s on Instagram",
+				"url": "https://www.youtube.com/shorts/v3TPaWtLTEI",
+				"video": "/assets/profile/reels/v3TPaWtLTEI.mp4",
 				"w": 344,
 				"h": 730
 			},
