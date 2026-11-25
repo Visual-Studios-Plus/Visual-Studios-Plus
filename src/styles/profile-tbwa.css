@@ -373,3 +373,154 @@
 @media (max-width: 900px) {
 	.cpDeck .cpStory_mosaic { order: -1; height: 72vw; max-height: 26rem; }
 }
+
+/* ---------- Brand cover: name and category in giant serif, product between ---------- */
+
+.cpCover {
+	position: relative;
+	overflow: hidden;
+	min-height: 100vh;
+	min-height: 100svh;
+	background: var(--cv-bg, #00c4f0) !important;
+	color: #fff;
+}
+
+.cpCover_word {
+	position: absolute;
+	left: 2vw;
+	right: 2vw;
+	margin: 0;
+	font-family: 'Playfair Display', var(--tb-serif, Georgia), serif;
+	font-weight: 800;
+	font-size: min(27vw, 42vh);
+	line-height: 0.8;
+	letter-spacing: -0.02em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: #f7f7f5;
+	pointer-events: none;
+}
+
+.cpCover_word--top { top: 4vh; z-index: 1; }
+.cpCover_word--bottom { bottom: 6vh; z-index: 1; font-size: min(22vw, 42vh); }
+
+/* The product stands over the top word and under nothing: it sits in front. */
+.cpCover_cut {
+	position: absolute;
+	z-index: 2;
+	left: 24%;
+	bottom: -6vh;
+	height: 96vh;
+	width: auto;
+	max-width: 48vw;
+	object-fit: contain;
+	filter: drop-shadow(0 30px 40px rgba(0, 40, 70, 0.25));
+}
+
+/* The bottom word passes in front of the jars' base, as on the print. */
+.cpCover_word--bottom { z-index: 3; }
+
+.cpCover_side {
+	position: absolute;
+	z-index: 4;
+	right: 5vw;
+	top: 14vh;
+	display: grid;
+	justify-items: end;
+	gap: 3.4vh;
+	width: min(31vw, 30rem);
+}
+
+.cpCover_logo {
+	width: min(15vw, 15rem);
+	height: auto;
+}
+
+.cpCover_text {
+	margin: 0;
+	font-family: var(--font-display);
+	font-size: min(1.15rem, 2.2vh);
+	font-weight: 400;
+	line-height: 1.55;
+	letter-spacing: 0.03em;
+	text-align: justify;
+	color: #fff;
+}
+
+@media (max-width: 900px) {
+	.cpCover { min-height: 0; aspect-ratio: auto; height: 100svh; }
+	.cpCover_word { font-size: 26vw; }
+	.cpCover_word--top { top: 9vh; }
+	.cpCover_word--bottom { bottom: 22vh; font-size: 23vw; }
+	.cpCover_cut { left: 14%; bottom: 18vh; height: 56vh; max-width: 74vw; }
+	.cpCover_side { left: var(--gutter); right: var(--gutter); top: auto; bottom: 7rem; width: auto; justify-items: start; gap: 1rem; }
+	.cpCover_logo { width: 9rem; }
+	.cpCover_text { font-size: 0.85rem; text-align: left; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+}
+
+/* Sized to fit: the name across ~70% of the width, the category edge to edge. */
+.cpCover_word--top { top: 3vh; font-size: min(15.5vw, 34vh); }
+.cpCover_word--bottom { z-index: 1; bottom: 3vh; font-size: min(16.2vw, 34vh); }
+.cpCover_cut { left: 26%; bottom: -4vh; height: 88vh; }
+.cpCover_side { top: 15vh; gap: 12vh; width: min(30vw, 29rem); }
+
+@media (max-width: 900px) {
+	.cpCover_word--top { top: 10vh; font-size: 17vw; }
+	.cpCover_word--bottom { bottom: 24vh; font-size: 16.5vw; }
+	.cpCover_side { gap: 1rem; }
+}
+@media (min-width: 901px) {
+	.cpCover_word--top { top: 11vh; font-size: min(14.5vw, 30vh); }
+	.cpCover_side { top: 19vh; }
+}
+
+/* Phones: the cover as a simple stack (name, product, category, logo, copy). */
+@media (max-width: 900px) {
+	.cpCover {
+		display: flex !important;
+		flex-direction: column;
+		align-items: stretch;
+		height: auto !important;
+		min-height: 100svh !important;
+		padding: 6.5rem var(--gutter) 7.5rem !important;
+	}
+	.cpCover_word,
+	.cpCover_word--top,
+	.cpCover_word--bottom {
+		position: relative !important;
+		inset: auto !important;
+		top: auto !important;
+		bottom: auto !important;
+		left: auto !important;
+		right: auto !important;
+		font-size: 21vw !important;
+		text-align: center;
+	}
+	.cpCover_word--bottom { order: 3; margin-top: -9vw; font-size: 17vw !important; }
+	.cpCover_word--top { order: 1; }
+	.cpCover_cut {
+		order: 2;
+		position: relative !important;
+		left: auto !important;
+		bottom: auto !important;
+		align-self: center;
+		height: auto !important;
+		width: 78vw !important;
+		max-width: 22rem !important;
+		margin-top: -10vw;
+	}
+	.cpCover_side {
+		order: 4;
+		position: relative !important;
+		inset: auto !important;
+		width: auto !important;
+		margin-top: 1.6rem;
+		justify-items: start;
+	}
+	.cpCover_text { -webkit-line-clamp: unset; display: block; }
+}
+
+@media (max-width: 900px) {
+	.cpCover_text { display: none !important; }
+	.cpCover_side { justify-items: center; }
+}

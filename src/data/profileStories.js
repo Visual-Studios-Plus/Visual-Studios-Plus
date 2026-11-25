@@ -21,7 +21,7 @@ export default [
 		imgs: [ 'nescafe-0', 'nescafe-1*', 'nescafe-2', 'nescafe-3' ]
 	},
 	{
-		match: 'Pond’s', bg: '#00b6ea', ink: '#03263a', wordColor: '#ffffff', spreads: [ 10 ], word: 'Pond’s', accent: '#5fc8ea',
+		match: 'Pond’s', cover: { bg: '#00c4f0', top: 'Pond’s', bottom: 'Skincare', cut: 'ponds-1' }, bg: '#00b6ea', ink: '#03263a', wordColor: '#ffffff', spreads: [ 10 ], word: 'Pond’s', accent: '#5fc8ea',
 		text: 'For Pond’s Sri Lanka, we conceptualised and executed a dynamic campaign for Pond’s Super Light Gel, featuring captivating photography and engaging social reels. Through teasers, launch posts and post-launch engagement, the campaign went viral — raising awareness and sparking conversations across their platforms.',
 		imgs: [ 'ponds-0', 'ponds-1*', 'ponds-2', 'ponds-3' ]
 	},
