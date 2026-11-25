@@ -6,7 +6,8 @@
  *   layout — 'grid' (a slideshow), 'phones' (reels in phone frames),
  *            'laptop' (a laptop that opens, playing the film), or for the
  *            photography pages 'ring', 'loupe', 'wall', 'brut'
- *   media  — { src, w, h, full?, video? }, in reading order
+ *   media  — { src, w, h, full?, video?, url? } in reading order; `url` links
+ *            a reel to where it was posted
  *   text   — the page's copy, set beside a laptop / under phones
  *   video  — the film a laptop plays (a file)
  *   yt     — or its YouTube id (played muted in the laptop, with sound in the viewer)
@@ -19,21 +20,25 @@ export default {
 		"media": [
 			{
 				"src": "/assets/profile/g/p07-0.webp",
+				"url": "https://www.instagram.com/reel/DGdK5TouJKx/",
 				"w": 376,
 				"h": 799
 			},
 			{
 				"src": "/assets/profile/g/p07-2.webp",
+				"url": "https://www.instagram.com/reel/DGqEhH9u5ow/",
 				"w": 376,
 				"h": 800
 			},
 			{
 				"src": "/assets/profile/g/p07-4.webp",
+				"url": "https://www.instagram.com/reel/DGnX9bONnrW/",
 				"w": 377,
 				"h": 800
 			},
 			{
 				"src": "/assets/profile/g/p07-6.webp",
+				"url": "https://www.instagram.com/reel/DGhPJevtGqq/",
 				"w": 377,
 				"h": 800
 			}

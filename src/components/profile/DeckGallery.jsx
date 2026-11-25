@@ -201,6 +201,14 @@ function Grid( { media, open, slide } ) {
 	);
 }
 
+/* A phone links out to its reel when it has one; otherwise it opens the viewer. */
+function PhoneWrap( { m, i, open, children } ) {
+	const props = { className: 'cpGal_phone', style: { '--i': i } };
+	return m.url
+		? <a { ...props } href={ m.url } target="_blank" rel="noopener noreferrer" aria-label={ `Watch reel ${ i + 1 } on Instagram (opens in a new tab)` }>{ children }</a>
+		: <button type="button" { ...props } onClick={ () => open( i ) } aria-label={ m.video ? 'Play the reel' : `View screen ${ i + 1 }` }>{ children }</button>;
+}
+
 function Phones( { media, open, text, slide } ) {
 	const vid = useRef( null );
 	useSlideVideo( slide, vid );
@@ -208,8 +216,7 @@ function Phones( { media, open, text, slide } ) {
 		<div className="cpGal_phones">
 			<div className="cpGal_phoneRow">
 				{ media.map( ( m, i ) => (
-					<button type="button" key={ m.src } className="cpGal_phone" onClick={ () => open( i ) }
-						style={ { '--i': i } } aria-label={ m.video ? 'Play the reel' : `View screen ${ i + 1 }` }>
+					<PhoneWrap key={ m.src } m={ m } i={ i } open={ open }>
 						<span className="cpGal_key cpGal_key--action" aria-hidden="true" />
 						<span className="cpGal_key cpGal_key--up" aria-hidden="true" />
 						<span className="cpGal_key cpGal_key--down" aria-hidden="true" />
@@ -223,7 +230,8 @@ function Phones( { media, open, text, slide } ) {
 							<span className="cpGal_island" aria-hidden="true" />
 							<span className="cpGal_glare" aria-hidden="true" />
 						</span>
-					</button>
+						{ m.url && <span className="cpGal_watch">Watch on Instagram <i aria-hidden="true">↗</i></span> }
+					</PhoneWrap>
 				) ) }
 			</div>
 			{ text && <p className="cpGal_note">{ text }</p> }
