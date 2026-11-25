@@ -22,24 +22,28 @@ export default {
 			{
 				"src": "/assets/profile/g/p07-0.webp",
 				"url": "https://www.instagram.com/reel/DGdK5TouJKx/",
+				"video": "/assets/profile/reels/DGdK5TouJKx.mp4",
 				"w": 376,
 				"h": 799
 			},
 			{
 				"src": "/assets/profile/g/p07-2.webp",
 				"url": "https://www.instagram.com/reel/DGqEhH9u5ow/",
+				"video": "/assets/profile/reels/DGqEhH9u5ow.mp4",
 				"w": 376,
 				"h": 800
 			},
 			{
 				"src": "/assets/profile/g/p07-4.webp",
 				"url": "https://www.instagram.com/reel/DGnX9bONnrW/",
+				"video": "/assets/profile/reels/DGnX9bONnrW.mp4",
 				"w": 377,
 				"h": 800
 			},
 			{
 				"src": "/assets/profile/g/p07-6.webp",
 				"url": "https://www.instagram.com/reel/DGhPJevtGqq/",
+				"video": "/assets/profile/reels/DGhPJevtGqq.mp4",
 				"w": 377,
 				"h": 800
 			}
@@ -102,6 +106,7 @@ export default {
 			{
 				"src": "/assets/profile/g/p10-0.webp",
 				"url": "https://www.instagram.com/reel/C8O4tIpBbA2/",
+				"video": "/assets/profile/reels/C8O4tIpBbA2.mp4",
 				"w": 343,
 				"h": 732
 			},
@@ -122,6 +127,7 @@ export default {
 			{
 				"src": "/assets/profile/g/p10-6.webp",
 				"url": "https://www.instagram.com/reel/C7yrHpIC5wi/",
+				"video": "/assets/profile/reels/C7yrHpIC5wi.mp4",
 				"w": 358,
 				"h": 760
 			}

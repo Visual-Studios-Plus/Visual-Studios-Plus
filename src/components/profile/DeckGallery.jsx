@@ -70,24 +70,28 @@ function Viewer( { items, index, onIndex, onClose, title } ) {
 	);
 }
 
-/* Plays a video only while its slide is showing (presentation or scroll). */
+/*
+ * Plays a slide's video(s) only while the slide is showing (presentation or
+ * scroll). `vid` is a video, or an element holding several (a phone row).
+ */
 function useSlideVideo( slide, vid ) {
 	useEffect( () => {
-		const v = vid.current;
+		const el = vid.current;
 		const s = slide.current;
-		if ( ! v || ! s || reduced ) {
+		if ( ! el || ! s || reduced ) {
 			return undefined;
 		}
-		const load = () => {
+		const vids = el.tagName === 'VIDEO' ? [ el ] : [ ...el.querySelectorAll( 'video' ) ];
+		if ( ! vids.length ) {
+			return undefined;
+		}
+		const play = () => vids.forEach( ( v ) => {
 			if ( ! v.getAttribute( 'src' ) ) {
 				v.src = v.dataset.src;
 			}
-		};
-		const play = () => {
-			load();
 			v.play().catch( () => {} );
-		};
-		const pause = () => v.pause();
+		} );
+		const pause = () => vids.forEach( ( v ) => v.pause() );
 		s.addEventListener( 'deck:enter', play );
 		s.addEventListener( 'deck:leave', pause );
 		const io = new IntersectionObserver( ( [ e ] ) => {
@@ -105,7 +109,7 @@ function useSlideVideo( slide, vid ) {
 			s.removeEventListener( 'deck:enter', play );
 			s.removeEventListener( 'deck:leave', pause );
 			io.disconnect();
-			v.pause();
+			pause();
 		};
 	}, [ slide, vid ] );
 }
@@ -217,7 +221,7 @@ function Phones( { media, open, text, slide } ) {
 	useSlideVideo( slide, vid );
 	return (
 		<div className="cpGal_phones">
-			<div className="cpGal_phoneRow">
+			<div className="cpGal_phoneRow" ref={ vid }>
 				{ media.map( ( m, i ) => (
 					<PhoneWrap key={ m.src } m={ m } i={ i } open={ open }>
 						<span className="cpGal_key cpGal_key--action" aria-hidden="true" />
@@ -227,7 +231,7 @@ function Phones( { media, open, text, slide } ) {
 						<span className="cpGal_bezel">
 							<span className="cpGal_screen">
 								{ m.video
-									? <video ref={ vid } data-src={ m.video } poster={ m.src } muted loop playsInline preload="none" aria-hidden="true" />
+									? <video data-src={ m.video } poster={ m.src } muted loop playsInline preload="none" aria-hidden="true" />
 									: <img src={ m.src } alt="" loading="lazy" decoding="async" /> }
 							</span>
 							<span className="cpGal_island" aria-hidden="true" />
