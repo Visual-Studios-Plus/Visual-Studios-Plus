@@ -2077,3 +2077,75 @@ a.cpGal_phone:hover .cpGal_watch { background: var(--ink, #111); color: var(--bg
 /* Room under the phones for their links. */
 .cpGal_phones:has(.cpGal_watch) .cpGal_phoneRow { margin-bottom: 2.4rem; }
 .cpGal_phones:has(.cpGal_watch) .cpGal_phone { --ph: min(calc(100vh - 23rem), 32rem); }
+
+/* ==========================================================================
+   Project results: TBWA-style data bites — a hairline, a quiet heading, then
+   big light figures in the brand colour with the unit raised beside them.
+   ========================================================================== */
+
+.cpKpi {
+	margin-top: min(1.8rem, 2.6vh);
+	padding-top: min(1rem, 1.6vh);
+	border-top: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+}
+
+.cpKpi_head {
+	margin: 0 0 min(0.9rem, 1.4vh);
+	font-family: var(--font-display);
+	font-size: 0.95rem;
+	font-weight: 400;
+	letter-spacing: 0.02em;
+	opacity: 0.85;
+}
+
+.cpKpi_row {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1.4rem;
+	margin: 0;
+}
+
+.cpKpi_item { min-width: 0; }
+
+.cpKpi_val {
+	margin: 0;
+	font-family: var(--font-display);
+	font-size: min(clamp(2.4rem, 4.2vw, 4.4rem), 7vh);
+	font-weight: 300;
+	line-height: 0.95;
+	letter-spacing: -0.03em;
+	color: var(--word, var(--accent, currentColor));
+	font-variant-numeric: lining-nums;
+	white-space: nowrap;
+}
+
+.cpKpi_val sup {
+	margin-left: 0.04em;
+	font-size: 0.42em;
+	letter-spacing: 0;
+	vertical-align: 0.95em;
+}
+
+/* Words, not figures (Asia's 50 Best, End-to-End): set smaller so they fit. */
+.cpKpi_item.is-word .cpKpi_val {
+	font-size: min(clamp(1.3rem, 1.9vw, 2rem), 3.6vh);
+	line-height: 1.1;
+	white-space: normal;
+}
+
+.cpKpi_label {
+	margin: min(0.6rem, 1vh) 0 0;
+	font-size: 0.8rem;
+	line-height: 1.35;
+	opacity: 0.75;
+}
+
+/* Branding slides are white: keep the figures in the ink colour. */
+.cpStory--brand .cpKpi_val { color: var(--accent, currentColor); }
+
+@media (max-width: 900px) {
+	.cpKpi_row { gap: 0.9rem; }
+	.cpKpi_val { font-size: clamp(1.9rem, 9vw, 2.8rem); }
+	.cpKpi_item.is-word .cpKpi_val { font-size: 1.1rem; }
+	.cpKpi_label { font-size: 0.72rem; }
+}

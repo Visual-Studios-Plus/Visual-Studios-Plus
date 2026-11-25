@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import media from '../../data/caseMedia.js';
+import GALLERIES from '../../data/profileGalleries.js';
 import { gsap, reduced, canHover, pad, slugify } from '../../lib/motion.js';
 
 /*
@@ -40,12 +41,47 @@ function Mark( { client, title } ) {
 	return null;
 }
 
+/*
+ * A project's results, three figures in the TBWA "data bite" style.
+ * Real campaign KPIs go in the story's `kpis` (profileStories.js) as
+ * [ value, label ] pairs. Until then the slide shows what is on record: the
+ * headline result, what was delivered (from the deck's gallery) and the year.
+ */
+const UNIT = { phones: [ 'Reels', 'Reel' ], grid: [ 'Frames', 'Frame' ], laptop: [ 'Films', 'Film' ], ring: [ 'Frames', 'Frame' ], wall: [ 'Frames', 'Frame' ], brut: [ 'Plates', 'Plate' ], loupe: [ 'Pieces', 'Piece' ] };
+function storyKpis( s ) {
+	if ( s.kpis ) {
+		return s.kpis;
+	}
+	const out = [];
+	if ( s.metric ) {
+		out.push( [ s.metric, s.label ] );
+	}
+	const made = {};
+	( s.spreads || [] ).forEach( ( p ) => {
+		const g = GALLERIES[ p ];
+		if ( g ) {
+			const n = g.layout === 'laptop' ? 1 : g.media.length;
+			made[ g.layout ] = ( made[ g.layout ] || 0 ) + n;
+		}
+	} );
+	Object.entries( made ).sort( ( a, b ) => b[ 1 ] - a[ 1 ] ).forEach( ( [ k, n ] ) => {
+		if ( out.length < 2 ) {
+			const u = UNIT[ k ] || UNIT.grid;
+			out.push( [ String( n ), `${ n === 1 ? u[ 1 ] : u[ 0 ] } delivered` ] );
+		}
+	} );
+	if ( s.year ) {
+		out.push( [ s.year, /[–-]/.test( s.year ) ? 'Years active' : 'Year delivered' ] );
+	}
+	return out.slice( 0, 3 );
+}
+
 /* One hero slide. Branding projects use the deck's white slide and yellow swoosh. */
 export function Story( { s, n, total, flip, label, cat } ) {
 	const stage = useRef( null );
 	const [ lead, ...floats ] = s.imgs;
 	const brand = s.type === 'Branding Project';
-	const row = Array.from( { length: 5 }, () => s.word );
+	const kpis = storyKpis( s );
 
 	const onMove = ( e ) => {
 		if ( reduced || ! canHover || ! stage.current ) {
@@ -68,15 +104,7 @@ export function Story( { s, n, total, flip, label, cat } ) {
 				<svg className="cpStory_swoosh" viewBox="0 0 400 400" aria-hidden="true">
 					<path d="M60 -20 C 40 160, 120 330, 300 330 C 400 330, 420 200, 330 150" fill="none" stroke="currentColor" strokeWidth="34" strokeLinecap="round" />
 				</svg>
-			) : (
-				<div className="cpStory_marquee" aria-hidden="true">
-					{ [ 0, 1, 2, 3 ].map( ( r ) => (
-						<div key={ r } className={ `cpStory_row${ r % 2 ? ' cpStory_row--out' : '' }` } data-dir={ r % 2 ? -1 : 1 }>
-							{ row.map( ( w, i ) => <span key={ i }>{ w }</span> ) }
-						</div>
-					) ) }
-				</div>
-			) }
+			) : null }
 
 			<div className="cpStory_grid">
 				<div className="cpStory_stage" ref={ stage } onMouseMove={ onMove } onMouseLeave={ onLeave }>
@@ -104,10 +132,20 @@ export function Story( { s, n, total, flip, label, cat } ) {
 					<h3 className="cpStory_title" id={ `${ storyId( s ) }-t` }>{ s.title }</h3>
 					<p className="cpStory_text">{ s.text }</p>
 					<ul className="pillList cpStory_tags">{ s.tags.map( ( t ) => <li key={ t }>{ t }</li> ) }</ul>
-					{ s.metric && (
-						<div className="cpStory_metric">
-							<p className="resultNum" data-count={ s.metric }>{ s.metric }</p>
-							<p className="cpStory_metricLabel">{ s.label }</p>
+					{ kpis.length > 0 && (
+						<div className="cpKpi">
+							<p className="cpKpi_head">The Results</p>
+							<dl className="cpKpi_row">
+								{ kpis.map( ( [ v, l ] ) => {
+									const m = /^([+-]?[d.,]+)(.*)$/.exec( v );
+									return (
+										<div key={ l } className={ `cpKpi_item${ m ? '' : ' is-word' }` }>
+											<dt className="cpKpi_val">{ m ? <>{ m[ 1 ] }{ m[ 2 ] && <sup>{ m[ 2 ].trim() }</sup> }</> : v }</dt>
+											<dd className="cpKpi_label">{ l }</dd>
+										</div>
+									);
+								} ) }
+							</dl>
 						</div>
 					) }
 					{ s.note && <p className="cpStory_note">* { s.note }</p> }
@@ -131,8 +169,7 @@ function build( story ) {
 		scale: 0.4, opacity: 0, rotate: ( i ) => ( i % 2 ? 22 : -22 ), y: 80,
 		duration: 1.1, ease: 'back.out(1.7)', stagger: 0.12
 	}, 0.35 )
-		.from( story.querySelectorAll( '.cpStory_copy > *' ), { y: 34, opacity: 0, duration: 0.9, ease: 'expo.out', stagger: 0.06 }, 0.2 )
-		.from( story.querySelectorAll( '.cpStory_row' ), { xPercent: ( i ) => ( i % 2 ? 12 : -12 ), opacity: 0, duration: 1.4, ease: 'expo.out', stagger: 0.08 }, 0 );
+		.from( story.querySelectorAll( '.cpStory_copy > *, .cpKpi_item' ), { y: 34, opacity: 0, duration: 0.9, ease: 'expo.out', stagger: 0.06 }, 0.2 )
 	const sw = story.querySelector( '.cpStory_swoosh path' );
 	if ( sw ) {
 		const len = sw.getTotalLength();
@@ -157,19 +194,11 @@ export function useStoryMotion( root, present = false ) {
 		if ( present ) {
 			const offs = stories.map( ( story ) => {
 				let tl = null;
-				let drift = [];
 				const enter = () => {
 					tl?.progress( 1 ).kill();
 					tl = build( story );
-					drift = [ ...story.querySelectorAll( '.cpStory_row' ) ].map( ( r ) => {
-						const dir = Number( r.dataset.dir );
-						return gsap.fromTo( r, { xPercent: dir > 0 ? 0 : -16 }, { xPercent: dir > 0 ? -16 : 0, duration: 26, ease: 'none', repeat: -1, yoyo: true } );
-					} );
 				};
-				const leave = () => {
-					drift.forEach( ( d ) => d.kill() );
-					drift = [];
-				};
+				const leave = () => {};
 				story.addEventListener( 'deck:enter', enter );
 				story.addEventListener( 'deck:leave', leave );
 				return () => {
@@ -191,10 +220,6 @@ export function useStoryMotion( root, present = false ) {
 					return;
 				}
 				const scrub = { trigger: story, start: 'top bottom', end: 'bottom top', scrub: 0.6 };
-				story.querySelectorAll( '.cpStory_row' ).forEach( ( r ) => {
-					const dir = Number( r.dataset.dir );
-					gsap.fromTo( r, { xPercent: dir > 0 ? 0 : -18 }, { xPercent: dir > 0 ? -18 : 0, ease: 'none', scrollTrigger: scrub } );
-				} );
 				story.querySelectorAll( '.cpStory_layer' ).forEach( ( layer ) => {
 					const sp = Number( layer.dataset.speed );
 					gsap.fromTo( layer, { yPercent: sp * 12 }, { yPercent: -sp * 12, ease: 'none', scrollTrigger: scrub } );
