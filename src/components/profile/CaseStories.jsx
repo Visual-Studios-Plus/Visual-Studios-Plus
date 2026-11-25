@@ -130,11 +130,12 @@ export function Story( { s, n, total, flip, label, cat } ) {
 						<p className="cpStory_client">{ s.client }</p>
 					</div>
 					<h3 className="cpStory_title" id={ `${ storyId( s ) }-t` }>{ s.title }</h3>
+					<p className="tbLabel cpStory_label">Overview</p>
 					<p className="cpStory_text">{ s.text }</p>
 					<ul className="pillList cpStory_tags">{ s.tags.map( ( t ) => <li key={ t }>{ t }</li> ) }</ul>
 					{ kpis.length > 0 && (
 						<div className="cpKpi">
-							<p className="cpKpi_head">The Results</p>
+							<p className="tbLabel cpKpi_head">The Results</p>
 							<dl className="cpKpi_row">
 								{ kpis.map( ( [ v, l ] ) => {
 									const m = /^([+-]?[d.,]+)(.*)$/.exec( v );
