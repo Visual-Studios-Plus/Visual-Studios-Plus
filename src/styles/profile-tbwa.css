@@ -674,3 +674,6 @@
 	.cpCover--mark .cpCover_side { top: 19vh; }
 }
 .cpCover--mark .cpCover_cut { filter: none; }
+@media (min-width: 901px) {
+	.cpCover--mark .cpCover_cut { left: 46%; }
+}
