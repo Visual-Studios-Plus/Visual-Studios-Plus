@@ -61,8 +61,22 @@ const LOGOS = [
 /* Slide 02 — Hello, and the wall of clients. */
 export function DeckHello() {
 	const ref = useInView();
+	// The logo cloud leans with the pointer, nearer bubbles more (--d).
+	const lean = ( e ) => {
+		const el = ref.current;
+		if ( ! el || e.pointerType === 'touch' ) {
+			return;
+		}
+		const r = el.getBoundingClientRect();
+		el.style.setProperty( '--px', ( ( e.clientX - r.left ) / r.width - 0.5 ).toFixed( 3 ) );
+		el.style.setProperty( '--py', ( ( e.clientY - r.top ) / r.height - 0.5 ).toFixed( 3 ) );
+	};
+	const rest = () => {
+		ref.current?.style.setProperty( '--px', 0 );
+		ref.current?.style.setProperty( '--py', 0 );
+	};
 	return (
-		<section className="cpSlide cpHello" ref={ ref } data-slide="Hello" aria-labelledby="cpHelloTitle">
+		<section className="cpSlide cpHello" ref={ ref } onPointerMove={ lean } onPointerLeave={ rest } data-slide="Hello" aria-labelledby="cpHelloTitle">
 			<div className="cpHello_copy">
 				<p className="cpHello_vs">VS+</p>
 				<h2 className="cpHello_title" id="cpHelloTitle">Hello<span>’</span></h2>
@@ -70,7 +84,7 @@ export function DeckHello() {
 			</div>
 			<ul className="cpHello_logos" aria-label="Brands we have worked with">
 				{ LOGOS.map( ( n, i ) => (
-					<li key={ n } style={ { '--i': i, '--f': `${ 5 + ( i % 5 ) }s` } }><img src={ L( n ) } alt={ n.replace( /-\d$/, '' ).replace( /-/g, ' ' ) } loading="lazy" decoding="async" /></li>
+					<li key={ n } style={ { '--i': i, '--f': `${ 7 + ( i % 5 ) * 1.3 }s`, '--d': 0.5 + ( ( i * 7 ) % 5 ) * 0.4, '--sx': `${ ( ( i * 37 ) % 17 ) - 8 }vw`, '--sy': `${ ( ( i * 53 ) % 13 ) - 6 }vh`, '--sr': `${ ( ( i * 29 ) % 50 ) - 25 }deg` } }><img src={ L( n ) } alt={ n.replace( /-\d$/, '' ).replace( /-/g, ' ' ) } loading="lazy" decoding="async" /></li>
 				) ) }
 			</ul>
 		</section>
