@@ -2149,3 +2149,35 @@ a.cpGal_phone:hover .cpGal_watch { background: var(--ink, #111); color: var(--bg
 	.cpKpi_item.is-word .cpKpi_val { font-size: 1.1rem; }
 	.cpKpi_label { font-size: 0.72rem; }
 }
+
+/* TBWA's data bites are set in a light Garamond: big serif figures. */
+.cpKpi_head {
+	font-family: 'Instrument Serif', Georgia, serif;
+	font-size: min(1.9rem, 3.4vh);
+	letter-spacing: 0;
+	opacity: 1;
+}
+
+.cpKpi_row { column-gap: 2rem; row-gap: 1rem; }
+
+.cpKpi_val {
+	font-family: 'Instrument Serif', Georgia, serif;
+	font-size: min(clamp(3.6rem, 6.4vw, 6.6rem), 11vh);
+	font-weight: 400;
+	line-height: 0.9;
+	letter-spacing: -0.01em;
+}
+
+.cpKpi_val sup { font-size: 0.5em; vertical-align: 0.8em; }
+
+.cpKpi_item.is-word .cpKpi_val {
+	font-size: min(clamp(2rem, 3vw, 3.2rem), 6vh);
+	line-height: 1;
+}
+
+.cpKpi_label { font-size: 0.85rem; max-width: 13rem; }
+
+@media (max-width: 900px) {
+	.cpKpi_val { font-size: clamp(2.8rem, 13vw, 4rem); }
+	.cpKpi_item.is-word .cpKpi_val { font-size: clamp(1.5rem, 6.5vw, 2rem); }
+}
