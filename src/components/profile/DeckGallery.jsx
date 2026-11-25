@@ -148,8 +148,28 @@ function useSlideActive( slide ) {
  * advances on its own while the slide is up (paused on hover), and any
  * thumbnail shows that photo. The feature opens the viewer.
  */
+/*
+ * A cover-flow row: the chosen photograph large in the middle, the others
+ * stepping down in size toward each edge. A side picture comes to the
+ * centre when clicked; the centre one opens the viewer. Arrows step too.
+ */
+const FLOW = [ 1, 0.62, 0.42, 0.28 ]; // height by distance from the centre
+
+/* The viewport size, kept current (the flow row lays itself out in px). */
+function useViewport() {
+	const [ vp, setVp ] = useState( () => ( { w: window.innerWidth, h: window.innerHeight } ) );
+	useEffect( () => {
+		const on = () => setVp( { w: window.innerWidth, h: window.innerHeight } );
+		window.addEventListener( 'resize', on );
+		return () => window.removeEventListener( 'resize', on );
+	}, [] );
+	return vp;
+}
+
 function Grid( { media, open } ) {
 	const n = media.length;
+	const [ at, setAt ] = useState( 0 );
+	const vp = useViewport();
 
 	if ( n === 1 ) {
 		return (
@@ -159,27 +179,61 @@ function Grid( { media, open } ) {
 		);
 	}
 
-	// A bento wall: every photograph at once, each tile shaped by its picture
-	// so little is cropped. Landscape goes wide, portrait goes tall, and the
-	// largest file (the hero shot) takes the big 2 x 2 tile.
-	const biggest = media.reduce( ( b, m, i ) => ( m.w * m.h > media[ b ].w * media[ b ].h ? i : b ), 0 );
-	const shape = ( m, i ) => {
-		const ar = m.w / m.h;
-		if ( i === biggest ) {
-			return ' is-big';
+	const side = Math.min( FLOW.length - 1, Math.floor( ( n - 1 ) / 2 ) );
+	const go = ( d ) => setAt( ( k ) => ( k + d + n ) % n );
+	// Size each picture by its distance from the centre and its own shape,
+	// then lay them out from the centre outwards so the chosen one is centred.
+	const phone = vp.w < 900;
+	const rowH = phone ? vp.w * 0.62 : Math.min( vp.h * 0.5, 540 );
+	const maxW = ( phone ? 0.7 : 0.34 ) * vp.w;
+	const gap = phone ? 8 : 16;
+	const row = [];
+	for ( let d = -side; d <= side; d++ ) {
+		const i = ( at + d + n ) % n;
+		const sc = FLOW[ Math.abs( d ) ];
+		const ar = media[ i ].w / media[ i ].h;
+		let h = rowH * sc;
+		let w = h * ar;
+		if ( w > maxW * sc ) {
+			w = maxW * sc;
+			h = w / ar;
 		}
-		return ar >= 1.5 ? ' is-wide' : ar <= 0.8 ? ' is-tall' : '';
-	};
+		row.push( { i, d, w, h } );
+	}
+	const c = row.findIndex( ( r ) => r.d === 0 );
+	row[ c ].x = 0;
+	for ( let k = c + 1; k < row.length; k++ ) {
+		row[ k ].x = row[ k - 1 ].x + row[ k - 1 ].w / 2 + gap + row[ k ].w / 2;
+	}
+	for ( let k = c - 1; k >= 0; k-- ) {
+		row[ k ].x = row[ k + 1 ].x - row[ k + 1 ].w / 2 - gap - row[ k ].w / 2;
+	}
+
 	return (
-		<ul className="cpGal_bento" style={ { '--n': n } }>
-			{ media.map( ( m, i ) => (
-				<li key={ m.src } className={ `cpGal_tile${ shape( m, i ) }` } style={ { '--i': i } }>
-					<button type="button" onClick={ () => open( i ) } aria-label={ `View photograph ${ i + 1 } full size` }>
-						<img src={ m.src } alt="" loading="lazy" decoding="async" />
-					</button>
-				</li>
-			) ) }
-		</ul>
+		<div className="cpGal_flow">
+			<ul className="cpGal_flowRow" style={ { height: rowH } }>
+				{ row.map( ( { i, d, w, h, x } ) => {
+					const m = media[ i ];
+					return (
+						<li key={ i } className={ d === 0 ? 'is-on' : undefined }
+							style={ { width: w, height: h, left: `calc(50% + ${ x - w / 2 }px)`, top: ( rowH - h ) / 2, '--k': Math.abs( d ) } }>
+							<button type="button" onClick={ () => ( d === 0 ? open( i ) : setAt( i ) ) }
+								aria-label={ d === 0 ? `View photograph ${ i + 1 } full size` : `Bring photograph ${ i + 1 } to the centre` }>
+								<img src={ m.src } alt="" loading="lazy" decoding="async" />
+							</button>
+						</li>
+					);
+				} ) }
+			</ul>
+			<div className="cpGal_flowBar">
+				<button type="button" onClick={ () => go( -1 ) } aria-label="Previous photograph">←</button>
+				<span>From { pad( 1 ) }</span>
+				<i aria-hidden="true"><b style={ { '--p': ( at + 1 ) / n } } /></i>
+				<span>To { pad( n ) }</span>
+				<button type="button" onClick={ () => go( 1 ) } aria-label="Next photograph">→</button>
+				<p className="cpGal_flowNo" aria-live="polite">{ pad( at + 1 ) } / { pad( n ) }</p>
+			</div>
+		</div>
 	);
 }
 

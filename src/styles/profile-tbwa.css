@@ -704,77 +704,137 @@
 .cpDeck .cpDolly_card:has(video) .cpDolly_shade { display: block !important; }
 
 
-/* ---------- Grid galleries: a bento wall ----------
- * Every photograph at once, in rounded tiles of mixed size that fill the
- * slide below its title. Every sixth tile is big (2 x 2), the fifth wide. */
+/* ---------- Grid galleries: a cover-flow row ----------
+ * The chosen photograph large in the middle; the others step down in size
+ * toward each edge (--s), all centred on one line, each at its own shape. */
 
-.cpGal_bento {
+.cpGal_flow {
 	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
-	grid-auto-rows: minmax(0, 1fr);
-	grid-auto-flow: row dense;
-	gap: clamp(0.4rem, 0.7vw, 0.7rem);
+	justify-items: center;
+	align-content: center;
+	gap: clamp(1rem, 3vh, 2rem);
 	width: 100%;
-	max-width: var(--maxw);
 	height: calc(100vh - 15.5rem);
-	margin: 0 auto;
+}
+
+.cpGal_flowRow {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: clamp(0.6rem, 1.2vw, 1.2rem);
+	width: 100%;
+	height: min(52vh, 34rem);
+	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-.cpGal_tile { min-width: 0; min-height: 0; }
-.cpGal_tile.is-big { grid-column: span 2; grid-row: span 2; }
-.cpGal_tile.is-wide { grid-column: span 2; }
+.cpGal_flowRow li {
+	flex: none;
+	height: calc(100% * var(--s));
+	aspect-ratio: var(--ar);
+	max-width: calc(36vw * var(--s));
+	opacity: calc(1 - var(--k) * 0.12);
+	transition: height 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+	animation: cpFlowIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 
-.cpGal_tile button {
+@keyframes cpFlowIn {
+	from { opacity: 0; transform: scale(0.9); }
+}
+
+.cpGal_flowRow button {
 	display: block;
 	width: 100%;
 	height: 100%;
 	padding: 0;
 	border: 0;
-	border-radius: 12px;
+	border-radius: 4px;
 	overflow: hidden;
 	background: #ddd8cc;
-	cursor: zoom-in;
+	cursor: pointer;
+	box-shadow: 0 18px 40px -26px rgba(0, 0, 0, 0.55);
 }
 
-.cpGal_tile img {
+.cpGal_flowRow li.is-on button { cursor: zoom-in; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6); }
+
+.cpGal_flowRow img {
 	display: block;
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+	transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (hover: hover) {
-	.cpGal_tile button:hover img { transform: scale(1.06); }
-	.cpGal_bento:hover .cpGal_tile button:not(:hover) img { filter: brightness(0.8) saturate(0.85); }
+	.cpGal_flowRow li:not(.is-on) button:hover img { transform: scale(1.06); }
 }
 
-/* Tiles rise in one after another as the slide arrives. */
-.cpGal_tile {
-	opacity: 0;
-	transform: translateY(24px) scale(0.97);
-	transition: opacity 0.6s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-	transition-delay: calc(var(--i) * 55ms);
+/* From 01 ———— To 09, with arrows: a quiet rail under the row. */
+.cpGal_flowBar {
+	display: flex;
+	align-items: center;
+	gap: 0.9rem;
+	font-family: var(--font-display);
+	font-size: 0.66rem;
+	font-weight: 500;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
 }
 
-.cpGal.is-in .cpGal_tile { opacity: 1; transform: none; }
+.cpGal_flowBar span { opacity: 0.65; }
+
+.cpGal_flowBar i {
+	position: relative;
+	display: block;
+	width: clamp(8rem, 16vw, 14rem);
+	height: 1px;
+	background: color-mix(in srgb, currentColor 25%, transparent);
+}
+
+.cpGal_flowBar b {
+	position: absolute;
+	left: 0;
+	top: -0.5px;
+	height: 2px;
+	width: calc(var(--p) * 100%);
+	background: currentColor;
+	transition: width 0.5s ease;
+}
+
+.cpGal_flowBar button {
+	width: 2.2rem;
+	height: 2.2rem;
+	border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+	border-radius: 50%;
+	background: none;
+	color: inherit;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: background 0.25s, color 0.25s;
+}
+
+.cpGal_flowBar button:hover { background: var(--tb-ink, #0a0a0d); color: #fff; }
+
+.cpGal_flowNo { margin: 0 0 0 0.6rem; font-weight: 600; }
 
 @media (max-width: 900px) {
-	.cpGal_bento {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		grid-auto-rows: 9.5rem;
-		height: auto;
-	}
-	.cpGal_tile.is-big { grid-row: span 2; }
+	.cpGal_flow { height: auto; }
+	.cpGal_flowRow { height: 46vw; gap: 0.4rem; overflow: hidden; }
+	.cpGal_flowRow li { max-width: calc(64vw * var(--s)); }
+	.cpGal_flowBar i { width: 5rem; }
+	.cpGal_flowNo { display: none; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-	.cpGal_tile { opacity: 1; transform: none; transition: none; }
+/* Laid out in px from the centre by the component: each picture glides. */
+.cpGal_flowRow { position: relative; display: block; overflow: visible; }
+.cpGal_flowRow li {
+	position: absolute;
+	max-width: none;
+	aspect-ratio: auto;
+	transition: left 0.75s cubic-bezier(0.65, 0, 0.35, 1), top 0.75s cubic-bezier(0.65, 0, 0.35, 1), width 0.75s cubic-bezier(0.65, 0, 0.35, 1), height 0.75s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.5s ease;
 }
-
-.cpGal_tile.is-tall { grid-row: span 2; }
+.cpGal--grid { overflow: hidden; }
 @media (max-width: 900px) {
-	.cpGal_tile.is-wide { grid-column: span 2; }
+	.cpGal_flowRow { height: auto; overflow: visible; }
 }
