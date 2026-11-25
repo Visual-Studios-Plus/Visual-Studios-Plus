@@ -677,3 +677,17 @@
 @media (min-width: 901px) {
 	.cpCover--mark .cpCover_cut { left: 46%; }
 }
+
+/* All cut-outs: smaller and centred between the words, so both words read.
+ * Pond's keeps its tall stack (set above with a stronger selector below). */
+@media (min-width: 901px) {
+	.cpCover:not(.cpCover--photo):not(.cpCover--mark) .cpCover_cut {
+		top: 54%;
+		bottom: auto;
+		height: 60vh;
+		max-width: 36vw;
+		translate: -50% -50%;
+	}
+	.cpCover[data-slide^="Pond"]:not(.cpCover--photo) .cpCover_cut { top: auto; bottom: -16vh; height: 122vh; max-width: 62vw; translate: -50% 0; }
+	.cpCover[data-slide^="American"]:not(.cpCover--photo) .cpCover_cut { top: 58%; height: auto; width: 30vw; max-width: 30vw; }
+}
