@@ -691,3 +691,11 @@
 	.cpCover[data-slide^="Pond"]:not(.cpCover--photo) .cpCover_cut { top: auto; bottom: -16vh; height: 122vh; max-width: 62vw; translate: -50% 0; }
 	.cpCover[data-slide^="American"]:not(.cpCover--photo) .cpCover_cut { top: 58%; height: auto; width: 30vw; max-width: 30vw; }
 }
+
+/* Khomba: the soap bar is wide and flat, sized like the Amex card. */
+@media (min-width: 901px) {
+	.cpCover[data-slide^="Khomba"]:not(.cpCover--photo) .cpCover_cut { height: auto; width: 34vw; max-width: 34vw; top: 55%; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.35)); }
+}
+@media (min-width: 901px) {
+	.cpCover[data-slide^="Khomba"]:not(.cpCover--photo) .cpCover_cut { width: 27vw; max-width: 27vw; top: 56%; }
+}
