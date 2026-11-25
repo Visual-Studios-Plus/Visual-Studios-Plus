@@ -16,7 +16,7 @@ export default {
 	'Ahmad Tea': { bg: '#3a2416', ink: '#f2c26b', top: 'Ahmad', bottom: 'Tea London', photo: 'ahmad-0' },
 	'Swisstek': { bg: '#6fa11b', ink: '#ffffff', top: 'Swisstek', bottom: 'Solar', cut: 'swisstek-cut' },
 	'Khomba': { bg: '#16a446', ink: '#eaff9c', top: 'Khomba', bottom: 'Herbal', cut: 'khomba-bar' },
-	'Imorich': { bg: '#f29bb8', ink: '#ffffff', top: 'Imorich', bottom: 'Ice Cream', cut: 'imorich-3' },
+	'Imorich': { bg: '#f29bb8', ink: '#ffffff', top: 'Imorich', bottom: 'Ice Cream', cut: 'imorich-tub' },
 	'Sozo': { bg: '#2fa7e0', ink: '#ffffff', top: 'Sozo', bottom: 'Sparkling', cut: 'sozo-1' },
 	'Too Good': { bg: '#4a2414', ink: '#f6d9a8', top: 'Too Good', bottom: 'Chocolatier', cut: 'toogood-0' },
 	'Viva La Vida': { bg: '#dfe9e4', ink: '#2f5d50', top: 'Viva La', bottom: 'Vida', cut: 'vivalavida-1' },
