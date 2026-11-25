@@ -524,3 +524,15 @@
 	.cpCover_text { display: none !important; }
 	.cpCover_side { justify-items: center; }
 }
+
+/* Bigger product: the jars fill the height and break the bottom edge. */
+@media (min-width: 901px) {
+	.cpCover_cut { left: 20%; bottom: -16vh; height: 122vh; max-width: 62vw; }
+}
+@media (max-width: 900px) {
+	.cpCover_cut { width: 96vw !important; max-width: 28rem !important; margin-top: -14vw; margin-bottom: -6vw; }
+}
+@media (min-width: 901px) {
+	.cpCover_cut { left: 13%; }
+	.cpCover_side { width: min(27vw, 27rem); }
+}
