@@ -14,7 +14,7 @@ export default {
 	'Knorr': { bg: '#1a8f43', ink: '#ffffff', top: 'Knorr', bottom: 'Mother’s Day', cut: 'knorr-0' },
 	'Munchee': { bg: '#4c0064', ink: '#ffd23f', top: 'Munchee', bottom: 'Festive', photo: 'munchee-0' },
 	'Ahmad Tea': { bg: '#3a2416', ink: '#f2c26b', top: 'Ahmad', bottom: 'Tea London', photo: 'ahmad-0' },
-	'Swisstek': { bg: '#6fa11b', ink: '#ffffff', top: 'Swisstek', bottom: 'Solar', photo: 'swisstek-0' },
+	'Swisstek': { bg: '#6fa11b', ink: '#ffffff', top: 'Swisstek', bottom: 'Solar', cut: 'swisstek-cut' },
 	'Khomba': { bg: '#16a446', ink: '#eaff9c', top: 'Khomba', bottom: 'Herbal', cut: 'khomba-bar' },
 	'Imorich': { bg: '#f29bb8', ink: '#ffffff', top: 'Imorich', bottom: 'Ice Cream', cut: 'imorich-1' },
 	'Sozo': { bg: '#2fa7e0', ink: '#ffffff', top: 'Sozo', bottom: 'Sparkling', cut: 'sozo-1' },
