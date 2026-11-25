@@ -666,3 +666,6 @@
 @media (max-width: 900px) {
 	.cpCover--mark .cpCover_cut { width: auto; height: 30svh; margin: 0; }
 }
+@media (min-width: 901px) {
+	.cpCover--mark .cpCover_cut { top: 36%; height: 50vh; }
+}
