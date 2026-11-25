@@ -669,3 +669,7 @@
 @media (min-width: 901px) {
 	.cpCover--mark .cpCover_cut { top: 36%; height: 50vh; }
 }
+@media (min-width: 901px) {
+	.cpCover--mark .cpCover_cut { top: 50%; height: 46vh; max-width: 30vw; }
+	.cpCover--mark .cpCover_side { top: 19vh; }
+}
