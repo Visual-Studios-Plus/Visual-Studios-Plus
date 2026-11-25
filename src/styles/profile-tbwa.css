@@ -329,3 +329,47 @@
 .cpDeck .cpDolly_word,
 .cpDeck .cpDolly_kicker { font-style: normal !important; text-align: left !important; }
 .cpDeck .cpDolly_kicker { max-width: none !important; width: auto !important; white-space: normal; }
+
+/* ---------- Opener mosaic: one tall frame, two stacked beside it ---------- */
+
+.cpStory_mosaic { display: none; }
+
+.cpDeck .cpStory_stage { display: none !important; }
+
+.cpDeck .cpStory_mosaic {
+	order: 2;
+	display: grid;
+	grid-template-columns: 1.35fr 1fr;
+	grid-template-rows: 1fr 1fr;
+	gap: clamp(0.5rem, 0.8vw, 0.9rem);
+	height: min(calc(100vh - 13rem), 44rem);
+}
+
+.cpDeck .cpStory_mosaic--1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.cpDeck .cpStory_mosaic--2 { grid-template-rows: 1fr; }
+
+.cpStory_pic {
+	min-width: 0;
+	min-height: 0;
+	margin: 0;
+	overflow: hidden;
+	background: #16161a;
+}
+
+.cpStory_mosaic--3 .cpStory_pic:first-child { grid-row: span 2; }
+
+.cpStory_pic img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+	.cpStory_pic:hover img { transform: scale(1.04); }
+}
+
+@media (max-width: 900px) {
+	.cpDeck .cpStory_mosaic { order: -1; height: 72vw; max-height: 26rem; }
+}

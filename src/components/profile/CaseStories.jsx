@@ -76,12 +76,25 @@ function storyKpis( s ) {
 	return out.slice( 0, 3 );
 }
 
+/*
+ * The opener's picture mosaic: three photographs, the project's own frames
+ * first, topped up from its gallery slides when it has fewer than three.
+ * Cut-outs only as a last resort; they don't crop well.
+ */
+function storyPics( s ) {
+	const own = s.imgs.filter( ( n ) => ! isCut( n ) ).map( storyImg );
+	const more = ( s.spreads || [] ).flatMap( ( p ) => ( GALLERIES[ p ]?.media || [] ).filter( ( m ) => ! m.video ).map( ( m ) => m.src ) );
+	const cuts = s.imgs.filter( isCut ).map( storyImg );
+	return [ ...new Set( [ ...own, ...more, ...cuts ] ) ].slice( 0, 3 );
+}
+
 /* One hero slide. Branding projects use the deck's white slide and yellow swoosh. */
 export function Story( { s, n, total, flip, label, cat } ) {
 	const stage = useRef( null );
 	const [ lead, ...floats ] = s.imgs;
 	const brand = s.type === 'Branding Project';
 	const kpis = storyKpis( s );
+	const pics = storyPics( s );
 
 	const onMove = ( e ) => {
 		if ( reduced || ! canHover || ! stage.current ) {
@@ -120,6 +133,14 @@ export function Story( { s, n, total, flip, label, cat } ) {
 								<img src={ storyImg( f ) } alt="" loading="lazy" decoding="async" />
 							</figure>
 						</div>
+					) ) }
+				</div>
+
+				<div className={ `cpStory_mosaic cpStory_mosaic--${ pics.length }` }>
+					{ pics.map( ( p, i ) => (
+						<figure key={ p } className="cpStory_pic" style={ { '--i': i } }>
+							<img src={ p } alt={ i === 0 ? `${ s.client } — ${ s.title }` : '' } loading="lazy" decoding="async" />
+						</figure>
 					) ) }
 				</div>
 
@@ -170,6 +191,7 @@ function build( story ) {
 		scale: 0.4, opacity: 0, rotate: ( i ) => ( i % 2 ? 22 : -22 ), y: 80,
 		duration: 1.1, ease: 'back.out(1.7)', stagger: 0.12
 	}, 0.35 )
+		.from( story.querySelectorAll( '.cpStory_pic' ), { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.2, ease: 'expo.inOut', stagger: 0.1, clearProps: 'clipPath' }, 0 )
 		.from( story.querySelectorAll( '.cpStory_copy > *, .cpKpi_item' ), { y: 34, opacity: 0, duration: 0.9, ease: 'expo.out', stagger: 0.06 }, 0.2 )
 	const sw = story.querySelector( '.cpStory_swoosh path' );
 	if ( sw ) {
