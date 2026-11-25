@@ -141,7 +141,6 @@ function useSlideActive( slide ) {
 	return on;
 }
 
-const HOLD = 3600; // ms each photo holds in the slideshow
 
 /*
  * The photo gallery as an editorial slideshow: a large feature frame that
@@ -149,25 +148,8 @@ const HOLD = 3600; // ms each photo holds in the slideshow
  * advances on its own while the slide is up (paused on hover), and any
  * thumbnail shows that photo. The feature opens the viewer.
  */
-function Grid( { media, open, slide } ) {
-	const [ at, setAt ] = useState( 0 );
-	const [ hold, setHold ] = useState( false );
-	const active = useSlideActive( slide );
+function Grid( { media, open } ) {
 	const n = media.length;
-
-	useEffect( () => {
-		if ( ! active ) {
-			setAt( 0 );
-		}
-	}, [ active ] );
-
-	useEffect( () => {
-		if ( ! active || hold || reduced || n < 2 ) {
-			return undefined;
-		}
-		const t = setTimeout( () => setAt( ( k ) => ( k + 1 ) % n ), HOLD );
-		return () => clearTimeout( t );
-	}, [ active, hold, at, n ] );
 
 	if ( n === 1 ) {
 		return (
@@ -177,31 +159,17 @@ function Grid( { media, open, slide } ) {
 		);
 	}
 
+	// A bento wall: every photograph at once, in tiles of mixed size.
 	return (
-		<div className="cpGal_show" onMouseEnter={ () => setHold( true ) } onMouseLeave={ () => setHold( false ) }>
-			<button type="button" className="cpGal_stage" onClick={ () => open( at ) } aria-label={ `View photograph ${ at + 1 } full size` }>
-				{ media.map( ( m, i ) => (
-					<img key={ m.src } src={ m.src } alt="" loading="lazy" decoding="async"
-						className={ i === at ? 'is-on' : undefined } style={ { '--ar': m.w / m.h } } />
-				) ) }
-				<span className="cpGal_timer" aria-hidden="true">
-					<i key={ `${ at }-${ active && ! hold }` } className={ active && ! hold ? 'is-running' : undefined } style={ { '--hold': `${ HOLD }ms` } } />
-				</span>
-			</button>
-			<div className="cpGal_side">
-				<p className="cpGal_index" aria-live="polite"><b>{ pad( at + 1 ) }</b><span>/ { pad( n ) }</span></p>
-				<ul className="cpGal_thumbs" style={ { '--cols': n > 6 ? 3 : 2 } }>
-					{ media.map( ( m, i ) => (
-						<li key={ m.src } style={ { '--i': i } }>
-							<button type="button" className={ i === at ? 'is-on' : undefined } onClick={ () => setAt( i ) }
-								aria-label={ `Show photograph ${ i + 1 }` } aria-current={ i === at || undefined }>
-								<img src={ m.src } alt="" loading="lazy" decoding="async" />
-							</button>
-						</li>
-					) ) }
-				</ul>
-			</div>
-		</div>
+		<ul className="cpGal_bento" style={ { '--n': n } }>
+			{ media.map( ( m, i ) => (
+				<li key={ m.src } className={ `cpGal_tile${ i % 6 === 0 ? ' is-big' : i % 6 === 4 ? ' is-wide' : '' }` } style={ { '--i': i } }>
+					<button type="button" onClick={ () => open( i ) } aria-label={ `View photograph ${ i + 1 } full size` }>
+						<img src={ m.src } alt="" loading="lazy" decoding="async" />
+					</button>
+				</li>
+			) ) }
+		</ul>
 	);
 }
 
@@ -308,7 +276,7 @@ export default function DeckGallery( { page, bg, ink, caption, label, cat } ) {
 					{ ! HINT[ g.layout ] && <span> · Click to view</span> }
 				</p>
 			</header>
-			{ g.layout === 'grid' && <Grid media={ g.media } open={ open } slide={ ref } /> }
+			{ g.layout === 'grid' && <Grid media={ g.media } open={ open } /> }
 			{ g.layout === 'phones' && <Phones media={ g.media } open={ open } text={ g.text } slide={ ref } /> }
 			{ g.layout === 'laptop' && <Laptop media={ g.media } open={ open } text={ g.text } video={ g.video } yt={ g.yt } slide={ ref } /> }
 			{ g.layout === 'ring' && <Ring media={ g.media } open={ open } active={ active } /> }

@@ -703,123 +703,73 @@
 /* TVC opener: the home showreel plays behind the title, under a wash. */
 .cpDeck .cpDolly_card:has(video) .cpDolly_shade { display: block !important; }
 
-/* ---------- Grid galleries: full-cover slideshow ----------
- * The current photograph fills the slide edge to edge; title, counter and a
- * single row of thumbnails sit over it on soft dark fades. */
 
-.cpDeck .cpGal--grid {
-	position: relative;
-	overflow: hidden;
-	padding: 0 !important;
-	background: #0a0a0d !important;
-	color: #fff !important;
+/* ---------- Grid galleries: a bento wall ----------
+ * Every photograph at once, in rounded tiles of mixed size that fill the
+ * slide below its title. Every sixth tile is big (2 x 2), the fifth wide. */
+
+.cpGal_bento {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	grid-auto-rows: minmax(0, 1fr);
+	grid-auto-flow: row dense;
+	gap: clamp(0.4rem, 0.7vw, 0.7rem);
+	width: 100%;
+	max-width: var(--maxw);
+	height: calc(100vh - 15.5rem);
+	margin: 0 auto;
+	padding: 0;
+	list-style: none;
 }
 
-.cpDeck .cpGal--grid .cpGal_head {
-	position: absolute;
-	z-index: 3;
-	top: 0;
-	left: 0;
-	right: 0;
-	max-width: none;
-	padding: clamp(6rem, 13vh, 8rem) var(--gutter) 3rem;
-	background: linear-gradient(to bottom, rgba(10, 10, 13, 0.7), transparent);
-	pointer-events: none;
-}
+.cpGal_tile { min-width: 0; min-height: 0; }
+.cpGal_tile.is-big { grid-column: span 2; grid-row: span 2; }
+.cpGal_tile.is-wide { grid-column: span 2; }
 
-.cpDeck .cpGal--grid .cpGal_title { color: #fff; }
-.cpDeck .cpGal--grid .cpGal_count { color: rgba(255, 255, 255, 0.75); }
-
-.cpDeck .cpGal--grid .cpGal_show,
-.cpDeck .cpGal--grid .cpGal_hero {
-	position: absolute;
-	inset: 0;
+.cpGal_tile button {
 	display: block;
-	max-width: none;
-	height: auto;
-	margin: 0;
-}
-
-.cpDeck .cpGal--grid .cpGal_stage {
-	position: absolute;
-	inset: 0;
 	width: 100%;
 	height: 100%;
-	border-radius: 0;
-	box-shadow: none;
+	padding: 0;
+	border: 0;
+	border-radius: 12px;
+	overflow: hidden;
+	background: #ddd8cc;
+	cursor: zoom-in;
 }
 
-.cpDeck .cpGal--grid .cpGal_stage img,
-.cpDeck .cpGal--grid .cpGal_hero img {
-	position: absolute;
-	inset: 0;
+.cpGal_tile img {
+	display: block;
 	width: 100%;
 	height: 100%;
-	max-width: none;
-	max-height: none;
-	border-radius: 0;
 	object-fit: cover;
+	transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
 }
 
-/* A fade at the foot so the strip and timer read over any picture. */
-.cpDeck .cpGal--grid .cpGal_stage::after {
-	content: '';
-	position: absolute;
-	inset: auto 0 0;
-	height: 38%;
-	background: linear-gradient(to top, rgba(10, 10, 13, 0.75), transparent);
-	pointer-events: none;
+@media (hover: hover) {
+	.cpGal_tile button:hover img { transform: scale(1.06); }
+	.cpGal_bento:hover .cpGal_tile button:not(:hover) img { filter: brightness(0.8) saturate(0.85); }
 }
 
-.cpDeck .cpGal--grid .cpGal_timer {
-	z-index: 2;
-	left: var(--gutter);
-	right: var(--gutter);
-	bottom: 7.4rem;
+/* Tiles rise in one after another as the slide arrives. */
+.cpGal_tile {
+	opacity: 0;
+	transform: translateY(24px) scale(0.97);
+	transition: opacity 0.6s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+	transition-delay: calc(var(--i) * 55ms);
 }
 
-.cpDeck .cpGal--grid .cpGal_side {
-	position: absolute;
-	z-index: 3;
-	right: var(--gutter);
-	bottom: 8.4rem;
-	display: flex;
-	align-items: flex-end;
-	gap: 1.2rem;
-	width: auto;
-	max-width: 60vw;
-}
-
-.cpDeck .cpGal--grid .cpGal_index { color: #fff; margin: 0; }
-
-.cpDeck .cpGal--grid .cpGal_thumbs {
-	display: flex !important;
-	gap: 0.4rem;
-	margin: 0;
-	grid-template-columns: none;
-}
-
-.cpDeck .cpGal--grid .cpGal_thumbs li { width: clamp(2.6rem, 3.6vw, 3.6rem); flex: none; }
-
-.cpDeck .cpGal--grid .cpGal_thumbs button {
-	display: block;
-	width: 100%;
-	aspect-ratio: 3 / 4;
-	border-radius: 4px;
-	overflow: hidden;
-	opacity: 0.6;
-	outline: 1px solid rgba(255, 255, 255, 0.25);
-	transition: opacity 0.25s, outline-color 0.25s, transform 0.25s;
-}
-
-.cpDeck .cpGal--grid .cpGal_thumbs button.is-on,
-.cpDeck .cpGal--grid .cpGal_thumbs button:hover { opacity: 1; outline: 2px solid var(--tb-yellow, #fecc00); transform: translateY(-3px); }
-
-.cpDeck .cpGal--grid .cpGal_thumbs img { width: 100%; height: 100%; object-fit: cover; }
+.cpGal.is-in .cpGal_tile { opacity: 1; transform: none; }
 
 @media (max-width: 900px) {
-	.cpDeck .cpGal--grid { min-height: 100svh; }
-	.cpDeck .cpGal--grid .cpGal_side { left: var(--gutter); right: var(--gutter); max-width: none; bottom: 7rem; overflow-x: auto; }
-	.cpDeck .cpGal--grid .cpGal_timer { bottom: 6.2rem; }
-	.cpDeck .cpGal--grid .cpGal_index { display: none; }
+	.cpGal_bento {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-auto-rows: 9.5rem;
+		height: auto;
+	}
+	.cpGal_tile.is-big { grid-row: span 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cpGal_tile { opacity: 1; transform: none; transition: none; }
 }
