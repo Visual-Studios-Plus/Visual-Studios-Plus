@@ -113,7 +113,7 @@ export default function CorporateProfile() {
 					return (
 						<Fragment key={ ch.id }>
 							<section className="cpSlide cpDeckReel" id={ ch.id } data-slide={ ch.label } data-cat={ ch.id }>
-								<ChapterReel label={ ch.label } kicker={ ch.kicker }
+								<ChapterReel video={ ch.id === 'tvc' ? data.site.showreel : undefined } still={ ch.id === 'tvc' ? '/assets/img/Cover.jpeg' : undefined } label={ ch.label } kicker={ ch.kicker }
 									accent={ items[ 0 ].accent } cards={ dollyCards( items ) } marks={ dollyMarks( items ) } present={ present } />
 							</section>
 

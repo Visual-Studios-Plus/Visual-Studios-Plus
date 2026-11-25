@@ -699,3 +699,6 @@
 @media (min-width: 901px) {
 	.cpCover[data-slide^="Khomba"]:not(.cpCover--photo) .cpCover_cut { width: 27vw; max-width: 27vw; top: 56%; }
 }
+
+/* TVC opener: the home showreel plays behind the title, under a wash. */
+.cpDeck .cpDolly_card:has(video) .cpDolly_shade { display: block !important; }
