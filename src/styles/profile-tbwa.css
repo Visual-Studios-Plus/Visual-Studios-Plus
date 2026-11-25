@@ -554,3 +554,7 @@
 @media (min-width: 901px) {
 	.cpCover[data-slide^="American"] .cpCover_cut { width: 30vw; max-width: 30vw; left: 46%; top: 58%; }
 }
+
+/* Chapter openers: type only, on night. No reel behind. */
+.cpDeck .cpDolly_shade { display: none !important; }
+.cpDeck .cpDolly_card { background: var(--tb-night) !important; }

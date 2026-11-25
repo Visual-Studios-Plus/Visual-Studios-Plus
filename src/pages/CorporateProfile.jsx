@@ -27,7 +27,6 @@ import STORIES from '../data/profileStories.js';
  * arrives. On touch screens the slides stack as you scroll.
  */
 
-const F = ( n ) => `/assets/photos/thumb/${ n }`;
 
 /* Every case study joined with its story from the profile, in deck order. */
 const ALL = data.caseStudies.map( ( c ) => {
@@ -114,7 +113,7 @@ export default function CorporateProfile() {
 					return (
 						<Fragment key={ ch.id }>
 							<section className="cpSlide cpDeckReel" id={ ch.id } data-slide={ ch.label } data-cat={ ch.id }>
-								<ChapterReel video={ ch.reel } still={ F( ch.figure ) } label={ ch.label } kicker={ ch.kicker }
+								<ChapterReel label={ ch.label } kicker={ ch.kicker }
 									accent={ items[ 0 ].accent } cards={ dollyCards( items ) } marks={ dollyMarks( items ) } present={ present } />
 							</section>
 

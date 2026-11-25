@@ -62,7 +62,7 @@ their grotesk. Both are already loaded by `index.html`.
   (e.g. "Asia's 50 Best") are set smaller so they fit.
 - **Gallery slide** (`.cpGal`). Stone surface, ink text. Caption as a slash
   label. Media keeps its own layout (grid, phones, laptop, wall …).
-- **Chapter opener** (`.cpDolly`). A full-bleed reel under a dark wash. The
+- **Chapter opener** (`.cpDolly`). Type only, on night: no reel behind. The
   chapter name sits bottom-left in a huge light serif, with the kicker as a
   slash line under it. The flying frames and logos are hidden.
 - **Navigation.** The glass category bar stays. Its active pill turns yellow

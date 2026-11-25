@@ -174,8 +174,8 @@ export default function ChapterReel( { video, still, label, kicker, cards = [], 
 					{ me && <span className="cpDolly_layer cpDolly_mark cpDolly_mark--light" data-k="markE" style={ place( 'markE' ) }><img src={ me } alt="" loading="lazy" decoding="async" /></span> }
 
 					<div className="cpDolly_card" data-k="card">
-						<img className="cpDolly_media cpDolly_still" src={ still } alt="" aria-hidden="true" loading="lazy" decoding="async" />
-						<video ref={ vid } className="cpDolly_media cpDolly_video" muted loop playsInline preload="none" aria-label={ `${ label } — reel` } />
+						{ still && <img className="cpDolly_media cpDolly_still" src={ still } alt="" aria-hidden="true" loading="lazy" decoding="async" /> }
+						{ video && <video ref={ vid } className="cpDolly_media cpDolly_video" muted loop playsInline preload="none" aria-label={ `${ label } — reel` } /> }
 						<span className="cpDolly_shade" aria-hidden="true" />
 						<div className="cpDolly_cardOver">
 							<p className="cpDolly_word">{ label }</p>
