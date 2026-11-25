@@ -6,8 +6,9 @@
  *   layout — 'grid' (a slideshow), 'phones' (reels in phone frames),
  *            'laptop' (a laptop that opens, playing the film), or for the
  *            photography pages 'ring', 'loupe', 'wall', 'brut'
- *   media  — { src, w, h, full?, video?, url? } in reading order; `url` links
- *            a reel to where it was posted
+ *   media  — { src, w, h, full?, video?, url?, linkLabel? } in reading order;
+ *            `url` links a reel to where it was posted (or, where the exact
+ *            post can't be found, to the account, named by `linkLabel`)
  *   text   — the page's copy, set beside a laptop / under phones
  *   video  — the film a laptop plays (a file)
  *   yt     — or its YouTube id (played muted in the laptop, with sound in the viewer)
@@ -100,22 +101,27 @@ export default {
 		"media": [
 			{
 				"src": "/assets/profile/g/p10-0.webp",
+				"url": "https://www.instagram.com/reel/C8O4tIpBbA2/",
 				"w": 343,
 				"h": 732
 			},
 			{
 				"src": "/assets/profile/g/p10-2.webp",
+				"url": "https://www.youtube.com/shorts/VD1ndsYceFg",
 				"w": 376,
 				"h": 800,
 				"video": "/assets/cases/ponds-reel.mp4"
 			},
 			{
 				"src": "/assets/profile/g/p10-4.webp",
+				"url": "https://www.instagram.com/ponds.sl/",
+				"linkLabel": "Pond’s on Instagram",
 				"w": 344,
 				"h": 730
 			},
 			{
 				"src": "/assets/profile/g/p10-6.webp",
+				"url": "https://www.instagram.com/reel/C7yrHpIC5wi/",
 				"w": 358,
 				"h": 760
 			}
@@ -473,16 +479,22 @@ export default {
 		"media": [
 			{
 				"src": "/assets/profile/g/p30-3.webp",
+				"url": "https://www.instagram.com/swadeshi_khomba/",
+				"linkLabel": "Khomba on Instagram",
 				"w": 447,
 				"h": 557
 			},
 			{
 				"src": "/assets/profile/g/p30-4.webp",
+				"url": "https://www.instagram.com/swadeshi_khomba/",
+				"linkLabel": "Khomba on Instagram",
 				"w": 393,
 				"h": 490
 			},
 			{
 				"src": "/assets/profile/g/p30-6.webp",
+				"url": "https://www.instagram.com/swadeshi_khomba/",
+				"linkLabel": "Khomba on Instagram",
 				"w": 639,
 				"h": 800
 			}
@@ -653,16 +665,19 @@ export default {
 		"media": [
 			{
 				"src": "/assets/profile/g/p49-0.webp",
+				"url": "https://www.youtube.com/shorts/B3dBwoteOx0",
 				"w": 311,
 				"h": 660
 			},
 			{
 				"src": "/assets/profile/g/p49-2.webp",
+				"url": "https://www.youtube.com/shorts/3-8qnlypQ-o",
 				"w": 304,
 				"h": 645
 			},
 			{
 				"src": "/assets/profile/g/p49-4.webp",
+				"url": "https://www.youtube.com/shorts/5fiTJ6sj1HQ",
 				"w": 325,
 				"h": 688
 			}

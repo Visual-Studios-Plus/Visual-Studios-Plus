@@ -201,11 +201,14 @@ function Grid( { media, open, slide } ) {
 	);
 }
 
+/* Where a phone's link goes, in words. */
+const linkText = ( m ) => m.linkLabel || ( /youtu/.test( m.url ) ? 'Watch on YouTube' : 'Watch on Instagram' );
+
 /* A phone links out to its reel when it has one; otherwise it opens the viewer. */
 function PhoneWrap( { m, i, open, children } ) {
 	const props = { className: 'cpGal_phone', style: { '--i': i } };
 	return m.url
-		? <a { ...props } href={ m.url } target="_blank" rel="noopener noreferrer" aria-label={ `Watch reel ${ i + 1 } on Instagram (opens in a new tab)` }>{ children }</a>
+		? <a { ...props } href={ m.url } target="_blank" rel="noopener noreferrer" aria-label={ `${ linkText( m ) }, reel ${ i + 1 } (opens in a new tab)` }>{ children }</a>
 		: <button type="button" { ...props } onClick={ () => open( i ) } aria-label={ m.video ? 'Play the reel' : `View screen ${ i + 1 }` }>{ children }</button>;
 }
 
@@ -230,7 +233,7 @@ function Phones( { media, open, text, slide } ) {
 							<span className="cpGal_island" aria-hidden="true" />
 							<span className="cpGal_glare" aria-hidden="true" />
 						</span>
-						{ m.url && <span className="cpGal_watch">Watch on Instagram <i aria-hidden="true">↗</i></span> }
+						{ m.url && <span className="cpGal_watch">{ linkText( m ) } <i aria-hidden="true">↗</i></span> }
 					</PhoneWrap>
 				) ) }
 			</div>
