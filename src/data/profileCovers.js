@@ -7,7 +7,7 @@
 export default {
 	'Nescafé': { bg: '#b5121b', ink: '#fff4e6', top: 'Nescafé', bottom: 'Fashion Week', cut: 'nescafe-1' },
 	'Pond’s': { bg: '#00c4f0', ink: '#f7f7f5', top: 'Pond’s', bottom: 'Skincare', cut: 'ponds-1' },
-	'UNDP': { bg: '#0a5fa8', ink: '#ffffff', top: 'UNDP', bottom: 'HackaDev', photo: 'undp-1' },
+	'UNDP': { bg: '#0a5fa8', ink: '#ffffff', top: 'UNDP', bottom: 'HackaDev', mark: true },
 	'Dankotuwa': { bg: '#b89b6e', ink: '#fbf7ef', top: 'Dankotuwa', bottom: 'Porcelain', cut: 'dankotuwa-1' },
 	'Ministry of Crab': { bg: '#0d0b09', ink: '#ffc21a', top: 'Ministry', bottom: 'of Crab', cut: 'crab-1' },
 	'American Express': { bg: '#2e4b57', ink: '#cfe7ee', top: 'Amex ×', bottom: 'Swim Week', cut: 'amex-1' },

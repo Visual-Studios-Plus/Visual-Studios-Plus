@@ -652,3 +652,17 @@
 .pfCard_menu span { background: #0a0a0d !important; }
 .pfCard_menu:hover span { background: #fff !important; }
 .pfCard_menu:hover { background: #0a0a0d !important; }
+
+/* ---------- Cover with the brand's logo as the centre piece (UNDP) ---------- */
+.cpCover--mark .cpCover_cut {
+	top: 50%;
+	bottom: auto;
+	height: 52vh;
+	max-width: 30vw;
+	translate: -50% -50%;
+	filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.25));
+}
+.cpCover--mark .cpCover_side { top: 30vh; }
+@media (max-width: 900px) {
+	.cpCover--mark .cpCover_cut { width: auto; height: 30svh; margin: 0; }
+}
