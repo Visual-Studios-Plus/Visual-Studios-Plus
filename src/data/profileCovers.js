@@ -10,7 +10,7 @@ export default {
 	'UNDP': { bg: '#0a5fa8', ink: '#ffffff', top: 'UNDP', bottom: 'HackaDev', photo: 'undp-1' },
 	'Dankotuwa': { bg: '#b89b6e', ink: '#fbf7ef', top: 'Dankotuwa', bottom: 'Porcelain', cut: 'dankotuwa-1' },
 	'Ministry of Crab': { bg: '#0d0b09', ink: '#ffc21a', top: 'Ministry', bottom: 'of Crab', cut: 'crab-1' },
-	'American Express': { bg: '#2e4b57', ink: '#cfe7ee', top: 'Amex', bottom: 'Swim Week', cut: 'amex-1' },
+	'American Express': { bg: '#2e4b57', ink: '#cfe7ee', top: 'Amex ×', bottom: 'Swim Week', cut: 'amex-1' },
 	'Knorr': { bg: '#1a8f43', ink: '#ffffff', top: 'Knorr', bottom: 'Mother’s Day', cut: 'knorr-0' },
 	'Munchee': { bg: '#4c0064', ink: '#ffd23f', top: 'Munchee', bottom: 'Festive', photo: 'munchee-0' },
 	'Ahmad Tea': { bg: '#3a2416', ink: '#f2c26b', top: 'Ahmad', bottom: 'Tea London', photo: 'ahmad-0' },
