@@ -22,7 +22,7 @@ export default {
 	'Viva La Vida': { bg: '#dfe9e4', ink: '#2f5d50', top: 'Viva La', bottom: 'Vida', cut: 'vivalavida-1' },
 	'CBW': { bg: '#141414', ink: '#f2f2f0', top: 'CBW', bottom: 'Cycles', cut: 'cbw-1' },
 	'Te Dalu': { bg: '#b8863b', ink: '#fff8ea', top: 'Te Dalu', bottom: 'Ella', photo: 'tedalu-0' },
-	'Viva': { bg: '#e4201b', ink: '#ffffff', top: 'Viva', bottom: 'Avurudu', photo: 'viva-0' },
+	'Viva': { bg: '#e4201b', ink: '#ffffff', top: 'Viva', bottom: 'Avurudu', emblem: '/assets/brands/viva-cut.webp' },
 	'MintPay': { bg: '#062a52', ink: '#ffffff', top: 'MintPay', bottom: 'Vouchers', cut: 'mintpay-1' },
 	'Swadeshi': { bg: '#17752a', ink: '#ffffff', top: 'Khomba', bottom: 'Women’s Day', cut: 'swadeshiwd-0' },
 	'DSI': { bg: '#5c0a78', ink: '#ffffff', top: 'DSI', bottom: 'Footwear', cut: 'dsi-1' },
