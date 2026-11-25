@@ -673,3 +673,4 @@
 	.cpCover--mark .cpCover_cut { top: 50%; height: 46vh; max-width: 30vw; }
 	.cpCover--mark .cpCover_side { top: 19vh; }
 }
+.cpCover--mark .cpCover_cut { filter: none; }
