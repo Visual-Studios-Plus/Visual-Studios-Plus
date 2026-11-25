@@ -230,3 +230,102 @@
 	.cpDeck .cpStory_title { font-size: clamp(2.4rem, 11vw, 3.4rem); }
 	.cpDeck .cpStory_text { font-size: 1rem; }
 }
+
+/* ---------- Chapter openers: a TBWA work hero ----------
+ * The reel plays full-bleed under a dark wash; the chapter name sits
+ * bottom-left in a huge light serif with the line under it. The flying
+ * frames and logos are switched off. */
+
+.cpDeck .cpDeckReel { background: var(--tb-night) !important; }
+
+.cpDeck .cpDolly_layer { display: none !important; }
+
+.cpDeck .cpDolly_stage,
+.cpDeck .cpDolly_world {
+	position: absolute !important;
+	inset: 0 !important;
+	transform: none !important;
+	perspective: none !important;
+}
+
+.cpDeck .cpDolly_card {
+	position: absolute !important;
+	inset: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	margin: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	transform: none !important;
+	opacity: 1 !important;
+	filter: none !important;
+}
+
+.cpDeck .cpDolly_media { border-radius: 0 !important; object-fit: cover; }
+
+.cpDeck .cpDolly_shade {
+	background:
+		linear-gradient(to top, rgba(10, 10, 13, 0.92) 0%, rgba(10, 10, 13, 0.35) 45%, rgba(10, 10, 13, 0.55) 100%) !important;
+	opacity: 1 !important;
+}
+
+.cpDeck .cpDolly_cardOver {
+	position: absolute !important;
+	inset: auto auto 0 0 !important;
+	right: 0 !important;
+	display: grid;
+	justify-items: start;
+	gap: min(0.9rem, 1.6vh);
+	max-width: var(--maxw);
+	margin: 0 auto !important;
+	padding: 0 var(--gutter) clamp(7.5rem, 17vh, 10rem) !important;
+	text-align: left !important;
+	transform: none !important;
+	opacity: 1 !important;
+}
+
+.cpDeck .cpDolly_word {
+	font-family: var(--tb-serif) !important;
+	font-size: min(clamp(3.4rem, 9vw, 9.5rem), 15vh) !important;
+	font-weight: 400 !important;
+	line-height: 0.92 !important;
+	letter-spacing: -0.03em !important;
+	text-transform: none !important;
+	color: var(--tb-paper) !important;
+	-webkit-text-stroke: 0 !important;
+	transform: none !important;
+}
+
+.cpDeck .cpDolly_kicker {
+	position: relative;
+	padding-left: 0.85em;
+	font-family: var(--tb-serif) !important;
+	font-size: min(clamp(1.4rem, 2.4vw, 2.6rem), 4.6vh) !important;
+	font-weight: 400 !important;
+	letter-spacing: -0.01em !important;
+	text-transform: none !important;
+	color: var(--tb-body) !important;
+	opacity: 1 !important;
+	transform: none !important;
+}
+
+.cpDeck .cpDolly_kicker::before {
+	content: '';
+	position: absolute;
+	left: 0.1em;
+	top: 0.05em;
+	width: 0.16em;
+	height: 1em;
+	background: var(--tb-yellow);
+	transform: skewX(-20deg);
+}
+
+@media (max-width: 900px) {
+	.cpDeck .cpDeckReel { min-height: 100svh; }
+	.cpDeck .cpDolly_cardOver { padding-bottom: 7rem !important; }
+	.cpDeck .cpDolly_word { font-size: clamp(3rem, 15vw, 4.6rem) !important; }
+}
+
+.cpDeck .cpDolly_word,
+.cpDeck .cpDolly_kicker { font-style: normal !important; text-align: left !important; }
+.cpDeck .cpDolly_kicker { max-width: none !important; width: auto !important; white-space: normal; }
